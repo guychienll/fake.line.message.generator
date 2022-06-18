@@ -10,9 +10,11 @@ import { v4 } from 'uuid';
 import { MessageForm } from '../src/components/MessageForm';
 import { ReceiverForm } from '../src/components/ReceiverForm';
 import html2canvas from 'html2canvas';
+import useGoogleAnalytics from '../src/hooks/useGA';
 
 const ConfigsForm = (props) => {
     const { instance = null, handleEditConfigs } = props;
+    useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
     const [form] = Form.useForm();
     return (
         <Form
