@@ -24,9 +24,9 @@ const StyledLineHeader = styled.div`
     background-repeat: no-repeat;
     display: flex;
     align-items: center;
-    padding: 0 45px;
+    padding: 0 32px;
     color: #202733;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     & > .unread-message-count {
         margin-right: 10px;

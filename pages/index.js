@@ -120,9 +120,11 @@ export default function Home() {
         html2canvas(_html, {
             width: _html.clientWidth,
             height: _html.clientHeight,
+            scale: 5,
+            useCORS: true,
             allowTaint: false,
-            useCORS: true, //允許跨域
         }).then((canvas) => {
+            canvas.getContext('2d').scale(100, 100);
             let src = canvas.toDataURL('image/png', 1.0);
             let image = new Image();
             image.src = src;
@@ -240,10 +242,10 @@ const Container = styled.div`
             align-items: center;
             justify-content: center;
             & > .line {
-                width: 480px;
-                height: calc(480px * (1840 / 1080));
-                --line-header-height: 60px;
-                --line-footer-height: 60px;
+                width: 320px;
+                height: calc(320px * (1840 / 1080));
+                --line-header-height: 38px;
+                --line-footer-height: 38px;
             }
         }
     }

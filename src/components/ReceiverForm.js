@@ -41,7 +41,7 @@ export const ReceiverForm = (props) => {
                                     });
                                 }}
                             />
-                            {getFieldsValue().avatar ? (
+                            {getFieldsValue().avatar && (
                                 <img
                                     style={{
                                         objectFit: 'cover',
@@ -51,8 +51,6 @@ export const ReceiverForm = (props) => {
                                     src={getFieldsValue().avatar}
                                     alt="receiver-avatar"
                                 />
-                            ) : (
-                                <Button htmlType="button">上傳</Button>
                             )}
                         </>
                     );

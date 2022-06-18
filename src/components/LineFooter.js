@@ -25,17 +25,17 @@ const StyledLineFooter = styled.div`
     position: relative;
     & > .unsent-send-message {
         position: absolute;
-        left: 180px;
+        left: 120px;
         font-size: 14px;
-        max-width: 200px;
+        max-width: 130px;
         overflow-x: hidden;
         white-space: nowrap;
     }
     & > .empty {
         position: absolute;
-        left: 180px;
+        left: 120px;
         font-size: 14px;
-        max-width: 200px;
+        max-width: 130px;
         overflow-x: hidden;
         white-space: nowrap;
         color: #cccbcc;
