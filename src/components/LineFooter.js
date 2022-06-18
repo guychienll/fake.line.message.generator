@@ -25,7 +25,7 @@ const StyledLineFooter = styled.div`
     position: relative;
     & > .unsent-send-message {
         position: absolute;
-        left: 120px;
+        left: 110px;
         font-size: 14px;
         max-width: 130px;
         overflow-x: hidden;
@@ -33,7 +33,7 @@ const StyledLineFooter = styled.div`
     }
     & > .empty {
         position: absolute;
-        left: 120px;
+        left: 110px;
         font-size: 14px;
         max-width: 130px;
         overflow-x: hidden;

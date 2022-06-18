@@ -5,44 +5,17 @@ import { LineHeader } from '../src/components/LineHeader';
 import { LineMessage } from '../src/components/LineMessage';
 import { LineFooter } from '../src/components/LineFooter';
 import { MESSAGE_TYPE } from '../src/constants';
-import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import { v4 } from 'uuid';
 import { MessageForm } from '../src/components/MessageForm';
 import { ReceiverForm } from '../src/components/ReceiverForm';
 import html2canvas from 'html2canvas';
 import useGoogleAnalytics from '../src/hooks/useGA';
+import { ConfigsForm } from '../src/components/ConfigsForm';
+import Head from 'next/head';
 
-const ConfigsForm = (props) => {
-    const { instance = null, handleEditConfigs } = props;
-    useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
-    const [form] = Form.useForm();
-    return (
-        <Form
-            onFinish={(values) => {
-                handleEditConfigs(values);
-            }}
-            form={form}
-            layout="vertical"
-            initialValues={{
-                unReadCount: instance?.unReadCount || 5,
-                unSendMessage: instance?.unSendMessage || '',
-            }}
-        >
-            <Form.Item name="unReadCount" label="未讀訊息數量">
-                <InputNumber></InputNumber>
-            </Form.Item>
-            <Form.Item name="unSendMessage" label="欲發送訊息">
-                <Input.TextArea></Input.TextArea>
-            </Form.Item>
-            <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    編輯
-                </Button>
-            </Form.Item>
-        </Form>
-    );
-};
 export default function Home() {
+    useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
     const [configs, setConfigs] = useState({
         unReadCount: 5,
         unSendMessage: '',
@@ -117,8 +90,8 @@ export default function Home() {
             ..._configs,
         }));
     };
-    function downLoadImg() {
-        var _html = document.getElementById('line'); // 獲取要下載的圖片
+    const downLoadImg = () => {
+        const _html = document.getElementById('line'); // 獲取要下載的圖片
         html2canvas(_html, {
             width: _html.clientWidth,
             height: _html.clientHeight,
@@ -141,9 +114,25 @@ export default function Home() {
             a.click();
             a.remove(); // 下載之後把建立的元素刪除
         });
-    }
+    };
     return (
         <Container>
+            <Head>
+                <title>Fake Line Message Generator</title>
+                <meta
+                    property="og:title"
+                    content="Fake Line Message Generator"
+                />
+                <meta
+                    name="description"
+                    content="An Generator for Fake Line Messages"
+                />
+                <meta
+                    property="og:description"
+                    content="An Generator for Fake Line Messages"
+                />
+                <meta property="og:image" content="/line_logo.png" />
+            </Head>
             <header>
                 <h1>Fake Line Message Generator</h1>
             </header>
@@ -172,20 +161,20 @@ export default function Home() {
                     </Button>
                 </div>
                 <div className="configs">
-                    <Row justify="space-around">
-                        <Col span={7}>
+                    <Row gutter={24}>
+                        <Col lg={7} md={24} sm={24}>
                             <ConfigsForm
                                 instance={configs}
                                 handleEditConfigs={handleEditConfigs}
                             />
                         </Col>
-                        <Col span={7}>
+                        <Col lg={7} md={24} sm={24}>
                             <ReceiverForm
                                 instance={receiver}
                                 handleEditReceiver={handleEditReceiver}
                             />
                         </Col>
-                        <Col span={5}>
+                        <Col lg={10} md={24} sm={24}>
                             <MessageForm
                                 instance={curEditingMessage}
                                 handleEditMessage={handleEditMessage}
@@ -222,6 +211,11 @@ const Container = styled.div`
             font-size: 24px;
             color: #eee8da;
         }
+        @media screen and (max-width: 768px) {
+            & > h1 {
+                font-size: 14px;
+            }
+        }
     }
     & > .content {
         padding: 20px;
@@ -244,10 +238,10 @@ const Container = styled.div`
             align-items: center;
             justify-content: center;
             & > .line {
-                width: 320px;
-                height: calc(320px * (1840 / 1080));
-                --line-header-height: 38px;
-                --line-footer-height: 38px;
+                width: 300px;
+                height: calc(300px * (1840 / 1080));
+                --line-header-height: 37px;
+                --line-footer-height: 37px;
             }
         }
     }
