@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { LineHeader } from '../src/components/LineHeader';
 import { LineMessage } from '../src/components/LineMessage';
-import { LineFooter } from './LineFooter';
+import { LineFooter } from '../src/components/LineFooter';
 import { MESSAGE_TYPE } from '../src/constants';
 import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import { v4 } from 'uuid';
