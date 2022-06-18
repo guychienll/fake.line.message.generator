@@ -242,7 +242,7 @@ const Container = styled.div`
             & > .line {
                 width: 480px;
                 height: calc(480px * (1840 / 1080));
-                --line-header-height: 54px;
+                --line-header-height: 60px;
                 --line-footer-height: 60px;
             }
         }

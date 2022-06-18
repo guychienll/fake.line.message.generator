@@ -26,7 +26,7 @@ const StyledLineHeader = styled.div`
     align-items: center;
     padding: 0 45px;
     color: #202733;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     & > .unread-message-count {
         margin-right: 10px;
