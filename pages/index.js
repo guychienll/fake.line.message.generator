@@ -240,10 +240,10 @@ const Container = styled.div`
             align-items: center;
             justify-content: center;
             & > .line {
-                width: 320px;
-                height: calc(320px * (1840 / 1080));
-                --line-header-height: 39px;
-                --line-footer-height: 39px;
+                width: 480px;
+                height: calc(480px * (1840 / 1080));
+                --line-header-height: 54px;
+                --line-footer-height: 60px;
             }
         }
     }

@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 export const LineFooter = (props) => {
-    const { unSendMessage = '' } = props
+    const { unSendMessage = '' } = props;
     return (
         <StyledLineFooter>
             {unSendMessage ? (
@@ -11,8 +11,8 @@ export const LineFooter = (props) => {
                 <div className="empty">Aa</div>
             )}
         </StyledLineFooter>
-    )
-}
+    );
+};
 
 const StyledLineFooter = styled.div`
     width: 100%;
@@ -25,19 +25,19 @@ const StyledLineFooter = styled.div`
     position: relative;
     & > .unsent-send-message {
         position: absolute;
-        left: 120px;
+        left: 180px;
         font-size: 14px;
-        max-width: 130px;
+        max-width: 200px;
         overflow-x: hidden;
         white-space: nowrap;
     }
     & > .empty {
         position: absolute;
-        left: 120px;
+        left: 180px;
         font-size: 14px;
-        max-width: 130px;
+        max-width: 200px;
         overflow-x: hidden;
         white-space: nowrap;
         color: #cccbcc;
     }
-`
+`;
