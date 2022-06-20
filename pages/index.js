@@ -21,7 +21,7 @@ export default function Home() {
         unSendMessage: '',
     });
     const [receiver, setReceiver] = useState({
-        name: 'receiver name',
+        name: 'Receiver',
         avatar: 'https://fakeimg.pl/100x100/',
     });
     const [messages, setMessages] = useState([
@@ -97,9 +97,8 @@ export default function Home() {
             height: _html.clientHeight,
             scale: 5,
             useCORS: true,
-            allowTaint: false,
+            allowTaint: true,
         }).then((canvas) => {
-            canvas.getContext('2d').scale(100, 100);
             let src = canvas.toDataURL('image/png', 1.0);
             let image = new Image();
             image.src = src;
