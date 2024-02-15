@@ -6,65 +6,79 @@ import {
     CardFooter,
     CardHeader,
     Chip,
+    Navbar,
+    NavbarBrand,
+    NavbarContent,
+    NavbarItem,
     Slider,
     Switch,
+    Link,
 } from '@nextui-org/react';
 import * as html2Img from 'html-to-image';
 import * as moment from 'moment';
-import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { useIntl } from 'react-intl';
 import { v4 } from 'uuid';
+import { create } from 'zustand';
 import { LineFooter } from '../src/components/LineFooter';
 import { LineHeader } from '../src/components/LineHeader';
 import { LineMessage } from '../src/components/LineMessage';
 import { MESSAGE_TYPE } from '../src/constants';
 import useGoogleAnalytics from '../src/hooks/useGA';
-import { create } from 'zustand';
 
-export const useLineStore = create((set) => ({
-    player: {
-        type: MESSAGE_TYPE.sender,
-        name: '小新',
-        avatar: '/hsin.jpg',
-    },
-    channel: {
-        name: '春日部防衛隊',
-        unReadCount: 32,
-    },
-    messages: [
-        {
-            id: v4(),
-            type: MESSAGE_TYPE.receiver,
-            read: null,
-            time: new Date('2022-06-18 08:00'),
-            message: '小新，今天要出去玩嗎？',
-            data: {
-                player: {
-                    type: MESSAGE_TYPE.receiver,
-                    name: '正男',
-                    avatar: '/nan.png',
-                },
-            },
-        },
-        {
-            id: v4(),
+export const useLineStore = create((set) => {
+    return {
+        player: {
             type: MESSAGE_TYPE.sender,
-            read: null,
-            time: new Date('2022-06-18 08:02'),
-            message: '好哇，我們公園見。',
-            data: {
-                player: {
-                    type: MESSAGE_TYPE.sender,
-                    name: '小新',
-                    avatar: '/hsin.jpg',
+            name: '小新 (Shin)',
+            avatar: '/hsin.jpg',
+        },
+        channel: {
+            name: '春日部防衛隊 (KB)',
+            unReadCount: 32,
+        },
+        messages: [
+            {
+                id: v4(),
+                type: MESSAGE_TYPE.receiver,
+                read: null,
+                time: new Date('2022-06-18 08:00'),
+                message: `小新，今天要出去玩嗎？\n Shin, do you want to go out to play today?`,
+                data: {
+                    player: {
+                        type: MESSAGE_TYPE.receiver,
+                        name: '正男 (Masao)',
+                        avatar: '/nan.png',
+                    },
                 },
             },
-        },
-    ],
-    setMessages: (msgs) => set(() => ({ messages: msgs })),
-    setPlayer: (player) => set(() => ({ player: player })),
-    setChannel: (channel) => set(() => ({ channel: channel })),
-}));
+            {
+                id: v4(),
+                type: MESSAGE_TYPE.sender,
+                read: null,
+                time: new Date('2022-06-18 08:02'),
+                message: `好哇，我們公園見。\n OK, see you in the park.`,
+                data: {
+                    player: {
+                        type: MESSAGE_TYPE.sender,
+                        name: '小新',
+                        avatar: '/hsin.jpg',
+                    },
+                },
+            },
+        ],
+        setMessages: (msgs) => set(() => ({ messages: msgs })),
+        setPlayer: (player) => set(() => ({ player: player })),
+        setChannel: (channel) => set(() => ({ channel: channel })),
+    };
+});
+
 export default function Home() {
+    const router = useRouter();
+    const intl = useIntl();
+    const t = intl.messages[router.locale];
+
     useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
     const store = useLineStore((state) => state);
     const { player, setPlayer, channel, setChannel } = store;
@@ -95,9 +109,41 @@ export default function Home() {
         linkElem.remove();
     };
 
+    const map = {
+        en: 'English',
+        'zh-TW': '繁體中文',
+    };
+
     return (
         <div className="min-h-dvg h-dvh">
-            <div className="flex h-full items-center justify-center">
+            <Navbar isBordered isBlurred={false}>
+                <NavbarBrand>
+                    <h1 className="font-bold text-inherit">
+                        Fake Line Message Generator
+                    </h1>
+                </NavbarBrand>
+                <NavbarContent justify="end">
+                    <NavbarItem className="flex gap-x-2">
+                        {[...router.locales].sort().map((locale) => {
+                            return (
+                                <Link
+                                    key={locale}
+                                    href={`/${locale}`}
+                                    locale={locale}
+                                >
+                                    {map[locale]}
+                                </Link>
+                            );
+                        })}
+                    </NavbarItem>
+                </NavbarContent>
+            </Navbar>
+            <div
+                style={{
+                    height: 'calc(100% - 4rem)',
+                }}
+                className="flex h-full items-center justify-center"
+            >
                 <Card className="w-[300px] py-2">
                     <CardHeader className="flex justify-between">
                         <div className="flex">
@@ -115,7 +161,7 @@ export default function Home() {
                                     variant="solid"
                                     color="success"
                                 >
-                                    Version. 14.1.3
+                                    {t['line.card.header.version']} 14.1.3
                                 </Chip>
                             </div>
                         </div>
@@ -126,7 +172,7 @@ export default function Home() {
                             htmlType="button"
                             onClick={handleDownloadImage}
                         >
-                            匯出
+                            {t['line.card.header.export']}
                         </Button>
                     </CardHeader>
                     <CardBody>
@@ -210,7 +256,11 @@ export default function Home() {
                             </div>
                             <div className="flex w-full flex-col">
                                 <Slider
-                                    label="未讀訊息數量"
+                                    label={
+                                        t[
+                                            'line.message.header.unread-message-count'
+                                        ]
+                                    }
                                     step={1}
                                     color="success"
                                     showTooltip

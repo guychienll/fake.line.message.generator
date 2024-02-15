@@ -7,11 +7,16 @@ import { MESSAGE_TYPE } from '../constants';
 import { Tooltip, Button } from '@nextui-org/react';
 import { IoTrashBinOutline } from 'react-icons/io5';
 import { FaEye } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { useIntl } from 'react-intl';
 
 export const LineMessage = (props) => {
     const store = useLineStore((state) => state);
     const [window, setWindow] = useState(false);
     const { messages, setMessages } = store;
+    const router = useRouter();
+    const intl = useIntl();
+    const t = intl.messages[router.locale];
 
     useEffect(() => {
         setWindow(true);
@@ -161,7 +166,9 @@ export const LineMessage = (props) => {
                                                                     <div className="mr-1 flex flex-col items-end gap-y-1 self-end text-[10px] tracking-wide text-[#46556b]">
                                                                         <small>
                                                                             {read
-                                                                                ? '已讀'
+                                                                                ? t[
+                                                                                      'line.message.body.read'
+                                                                                  ]
                                                                                 : ''}
                                                                         </small>
                                                                         <small>
@@ -172,7 +179,8 @@ export const LineMessage = (props) => {
                                                                             )}
                                                                         </small>{' '}
                                                                     </div>
-                                                                    <div className="message m-w-[160px] relative break-words rounded-[13px] bg-[#aed589] px-3 py-2 text-sm text-[#000]">
+
+                                                                    <div className="message relative w-full max-w-[180px] break-words rounded-[13px] bg-[#aed589] px-3 py-2 text-sm text-[#000]">
                                                                         {
                                                                             message
                                                                         }
@@ -239,7 +247,7 @@ export const LineMessage = (props) => {
                                                                             '/100x100.png'
                                                                         }
                                                                     />
-                                                                    <div>
+                                                                    <div className="max-w-[180px]">
                                                                         <div className="mb-0.5 text-xs">
                                                                             {
                                                                                 msg
@@ -248,13 +256,13 @@ export const LineMessage = (props) => {
                                                                                     .name
                                                                             }
                                                                         </div>
-                                                                        <div className="message m-w-[160px] relative break-words rounded-[13px] bg-[#ffffff] px-3 py-2 text-sm text-[#000]">
+                                                                        <div className="message relative w-full  break-words rounded-[13px] bg-[#ffffff] px-3 py-2 text-sm text-[#000]">
                                                                             {
                                                                                 message
                                                                             }
                                                                         </div>
                                                                     </div>
-                                                                    <div className="ml-1 self-end text-[10px] text-[10px] tracking-wide text-[#46556b]">
+                                                                    <div className="ml-1 self-end  text-[10px] tracking-wide text-[#46556b]">
                                                                         <small className="time">
                                                                             {moment(
                                                                                 time
