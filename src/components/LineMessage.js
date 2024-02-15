@@ -9,6 +9,7 @@ import { IoTrashBinOutline } from 'react-icons/io5';
 import { FaEye } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { useIntl } from 'react-intl';
+import clsx from 'clsx';
 
 export const LineMessage = (props) => {
     const store = useLineStore((state) => state);
@@ -17,6 +18,7 @@ export const LineMessage = (props) => {
     const router = useRouter();
     const intl = useIntl();
     const t = intl.messages[router.locale];
+    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
         setWindow(true);
@@ -28,7 +30,11 @@ export const LineMessage = (props) => {
 
     return (
         <DragDropContext
+            onDragStart={() => {
+                setIsDragging(true);
+            }}
             onDragEnd={(result) => {
+                setIsDragging(false);
                 const { source, destination } = result;
 
                 if (!source?.droppableId || !destination?.droppableId) {
@@ -62,7 +68,13 @@ export const LineMessage = (props) => {
                         <div
                             ref={provided.innerRef}
                             {...provided.droppableProps}
-                            className="flex h-[420px] w-auto  flex-col  overflow-auto bg-[#8CABD9] p-1 scrollbar-hide"
+                            className={clsx([
+                                'flex h-[420px] w-auto  flex-col  overflow-auto bg-[#8CABD9] p-1 scrollbar-hide',
+                                {
+                                    'bg-orange-200': isDragging,
+                                    'opacity-70': isDragging,
+                                },
+                            ])}
                         >
                             {messages
                                 .sort((a, b) => {
