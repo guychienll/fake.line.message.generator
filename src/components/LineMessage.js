@@ -1,197 +1,282 @@
-import React, { Fragment } from 'react';
-import styled from 'styled-components';
-import { DAYS, MESSAGE_TYPE } from '../constants';
-import moment from 'moment';
+import { Avatar } from '@nextui-org/react';
+import * as moment from 'moment';
+import React, { Fragment, useEffect, useState } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { useLineStore } from '../../pages';
+import { MESSAGE_TYPE } from '../constants';
+import { Tooltip, Button } from '@nextui-org/react';
+import { IoTrashBinOutline } from 'react-icons/io5';
+import { FaEye } from 'react-icons/fa';
 
 export const LineMessage = (props) => {
-    const { receiver, messages, setCurEditingMessage } = props;
+    const store = useLineStore((state) => state);
+    const [window, setWindow] = useState(false);
+    const { messages, setMessages } = store;
+
+    useEffect(() => {
+        setWindow(true);
+    }, []);
+
+    if (!window) {
+        return null;
+    }
+
     return (
-        <StyledLineMessage>
-            {messages
-                .sort((a, b) => {
-                    if (moment(a.time).isSame(moment(b.time))) {
-                        return 0;
-                    }
-                    if (moment(a.time).isBefore(moment(b.time))) {
-                        return -1;
-                    }
-                    if (moment(a.time).isAfter(moment(b.time))) {
-                        return 1;
-                    }
-                })
-                .map((msg, index) => {
-                    const { type, time, read, message } = msg;
+        <DragDropContext
+            onDragEnd={(result) => {
+                const { source, destination } = result;
+
+                if (!source?.droppableId || !destination?.droppableId) {
+                    return;
+                }
+
+                if (
+                    source.droppableId === destination.droppableId &&
+                    source.index === destination.index
+                ) {
+                    return;
+                }
+
+                const nextMessages = [...messages];
+
+                nextMessages[source.index].time =
+                    source.index >= destination.index
+                        ? moment(nextMessages[destination.index].time)
+                              .add(-1, 'second')
+                              .toDate()
+                        : moment(nextMessages[destination.index].time)
+                              .add(1, 'second')
+                              .toDate();
+
+                setMessages(nextMessages);
+            }}
+        >
+            <Droppable droppableId="droppable-id">
+                {(provided) => {
                     return (
-                        <Fragment key={index}>
-                            {type === MESSAGE_TYPE.badge && (
-                                <div
-                                    onClick={() => {
-                                        setCurEditingMessage(msg);
-                                    }}
-                                    className="badge"
-                                >
-                                    {message ||
-                                        moment(time).format(
-                                            `M/DD ( ${
-                                                DAYS[moment(time).day()].zh
-                                            } )`
-                                        )}
-                                </div>
-                            )}
-                            {type === MESSAGE_TYPE.sender && (
-                                <div
-                                    className="sender"
-                                    onClick={() => {
-                                        setCurEditingMessage(msg);
-                                    }}
-                                >
-                                    <div className="status">
-                                        <small className="read">
-                                            {read ? '已讀' : ''}
-                                        </small>
-                                        <small className="time">
-                                            {moment(time).format('HH:mm')}
-                                        </small>
-                                    </div>
-                                    <div className="message">{message}</div>
-                                </div>
-                            )}
-                            {type === MESSAGE_TYPE.receiver && (
-                                <div
-                                    className="receiver"
-                                    onClick={() => {
-                                        setCurEditingMessage(msg);
-                                    }}
-                                >
-                                    <img
-                                        className="avatar"
-                                        alt="receiver-avatar"
-                                        src={
-                                            receiver?.avatar ||
-                                            'https://fakeimg.pl/30x30/'
-                                        }
-                                    />
-                                    <div className="message">{message}</div>
-                                    <div className="status">
-                                        <small className="time">
-                                            {moment(time).format('HH:mm')}
-                                        </small>
-                                    </div>
-                                </div>
-                            )}
-                        </Fragment>
+                        <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className="flex h-[420px] w-auto  flex-col  overflow-auto bg-[#8CABD9] p-1 scrollbar-hide"
+                        >
+                            {messages
+                                .sort((a, b) => {
+                                    if (moment(a.time).isSame(moment(b.time))) {
+                                        return 0;
+                                    }
+                                    if (
+                                        moment(a.time).isBefore(moment(b.time))
+                                    ) {
+                                        return -1;
+                                    }
+                                    if (
+                                        moment(a.time).isAfter(moment(b.time))
+                                    ) {
+                                        return 1;
+                                    }
+                                })
+                                .map((msg, index) => {
+                                    const { type, time, read, message, id } =
+                                        msg;
+                                    return (
+                                        <Draggable
+                                            key={msg.id}
+                                            draggableId={id}
+                                            index={index}
+                                        >
+                                            {(provided) => {
+                                                return (
+                                                    <Fragment>
+                                                        {type ===
+                                                            MESSAGE_TYPE.sender && (
+                                                            <Tooltip
+                                                                placement="right"
+                                                                content={
+                                                                    <div className="flex flex-col gap-y-2">
+                                                                        <Button
+                                                                            color="danger"
+                                                                            isIconOnly
+                                                                            onPress={() => {
+                                                                                const nextMessages =
+                                                                                    messages.filter(
+                                                                                        (
+                                                                                            _msg
+                                                                                        ) => {
+                                                                                            if (
+                                                                                                msg.id !==
+                                                                                                _msg.id
+                                                                                            ) {
+                                                                                                return _msg;
+                                                                                            }
+                                                                                        }
+                                                                                    );
+                                                                                setMessages(
+                                                                                    nextMessages
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            <IoTrashBinOutline />
+                                                                        </Button>
+                                                                        <Button
+                                                                            color="secondary"
+                                                                            isIconOnly
+                                                                            onPress={() => {
+                                                                                const targetIdx =
+                                                                                    messages.findIndex(
+                                                                                        (
+                                                                                            _msg
+                                                                                        ) =>
+                                                                                            _msg.id ===
+                                                                                            msg.id
+                                                                                    );
+                                                                                const nextMessages =
+                                                                                    [
+                                                                                        ...messages,
+                                                                                    ];
+                                                                                nextMessages[
+                                                                                    targetIdx
+                                                                                ].read =
+                                                                                    !messages[
+                                                                                        targetIdx
+                                                                                    ]
+                                                                                        .read;
+                                                                                setMessages(
+                                                                                    nextMessages
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            <FaEye />
+                                                                        </Button>
+                                                                    </div>
+                                                                }
+                                                            >
+                                                                <div
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                    ref={
+                                                                        provided.innerRef
+                                                                    }
+                                                                    className="mb-2 flex w-full cursor-pointer justify-end"
+                                                                >
+                                                                    <div className="mr-1 flex flex-col items-end gap-y-1 self-end text-[10px] tracking-wide text-[#46556b]">
+                                                                        <small>
+                                                                            {read
+                                                                                ? '已讀'
+                                                                                : ''}
+                                                                        </small>
+                                                                        <small>
+                                                                            {moment(
+                                                                                time
+                                                                            ).format(
+                                                                                'HH:mm'
+                                                                            )}
+                                                                        </small>{' '}
+                                                                    </div>
+                                                                    <div className="message m-w-[160px] relative break-words rounded-[13px] bg-[#aed589] px-3 py-2 text-sm text-[#000]">
+                                                                        {
+                                                                            message
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </Tooltip>
+                                                        )}
+                                                        {type ===
+                                                            MESSAGE_TYPE.receiver && (
+                                                            <Tooltip
+                                                                placement="left"
+                                                                content={
+                                                                    <div>
+                                                                        <Button
+                                                                            color="danger"
+                                                                            isIconOnly
+                                                                            onPress={() => {
+                                                                                const nextMessages =
+                                                                                    messages.filter(
+                                                                                        (
+                                                                                            _msg
+                                                                                        ) => {
+                                                                                            if (
+                                                                                                msg.id !==
+                                                                                                _msg.id
+                                                                                            ) {
+                                                                                                return _msg;
+                                                                                            }
+                                                                                        }
+                                                                                    );
+                                                                                setMessages(
+                                                                                    nextMessages
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            <IoTrashBinOutline />
+                                                                        </Button>
+                                                                    </div>
+                                                                }
+                                                            >
+                                                                <div
+                                                                    {...provided.draggableProps}
+                                                                    {...provided.dragHandleProps}
+                                                                    ref={
+                                                                        provided.innerRef
+                                                                    }
+                                                                    className="receiver mb-2 flex cursor-pointer self-start"
+                                                                >
+                                                                    <Avatar
+                                                                        width={
+                                                                            30
+                                                                        }
+                                                                        height={
+                                                                            30
+                                                                        }
+                                                                        alt="receiver-avatar"
+                                                                        size="sm"
+                                                                        className="mr-2"
+                                                                        src={
+                                                                            msg
+                                                                                .data
+                                                                                .player
+                                                                                .avatar ||
+                                                                            '/100x100.png'
+                                                                        }
+                                                                    />
+                                                                    <div>
+                                                                        <div className="mb-0.5 text-xs">
+                                                                            {
+                                                                                msg
+                                                                                    .data
+                                                                                    .player
+                                                                                    .name
+                                                                            }
+                                                                        </div>
+                                                                        <div className="message m-w-[160px] relative break-words rounded-[13px] bg-[#ffffff] px-3 py-2 text-sm text-[#000]">
+                                                                            {
+                                                                                message
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="ml-1 self-end text-[10px] text-[10px] tracking-wide text-[#46556b]">
+                                                                        <small className="time">
+                                                                            {moment(
+                                                                                time
+                                                                            ).format(
+                                                                                'HH:mm'
+                                                                            )}
+                                                                        </small>
+                                                                    </div>
+                                                                </div>
+                                                            </Tooltip>
+                                                        )}
+                                                    </Fragment>
+                                                );
+                                            }}
+                                        </Draggable>
+                                    );
+                                })}
+                            {provided.placeholder}
+                        </div>
                     );
-                })}
-        </StyledLineMessage>
+                }}
+            </Droppable>
+        </DragDropContext>
     );
 };
-
-const StyledLineMessage = styled.div`
-    width: 100%;
-    height: calc(100% - var(--line-header-height) - var(--line-footer-height));
-    background-color: #fff;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-    background-image: url('/line-message.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    & > .badge {
-        cursor: pointer;
-        align-self: center;
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 30px;
-        background-color: #6f86a3;
-        color: #fff;
-        margin-bottom: 10px;
-        font-size: 12px;
-    }
-    & > .receiver {
-        cursor: pointer;
-        display: flex;
-        align-self: flex-start;
-        margin-bottom: 8px;
-        & > img {
-            object-fit: cover;
-        }
-        & > .status {
-            color: #46556b;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-            align-self: flex-end;
-            & > small.time {
-                margin-left: 5px;
-            }
-        }
-        & > .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 15px;
-            margin-right: 10px;
-        }
-        & > .message {
-            font-size: 14px;
-            color: #000;
-            padding: 7px 12px;
-            border-radius: 13px;
-            position: relative;
-            background-color: #fff;
-            display: inline-block;
-            max-width: 160px;
-            word-break: break-word;
-            align-self: flex-start;
-            &:after {
-                content: '';
-                background-image: url('/line-msg-received-after.png');
-                background-size: cover;
-                position: absolute;
-                top: 0;
-                left: -4px;
-                transform: rotateY(180deg);
-                z-index: 1;
-                width: 13px;
-                height: 10px;
-            }
-        }
-    }
-    & > .sender {
-        cursor: pointer;
-        display: flex;
-        align-self: flex-end;
-        margin-bottom: 8px;
-        & > .status {
-            display: flex;
-            flex-direction: column;
-            align-self: flex-end;
-            align-items: flex-end;
-            margin-right: 5px;
-            color: #46556b;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
-        & > .message {
-            font-size: 14px;
-            color: #000;
-            padding: 7px 12px;
-            border-radius: 13px;
-            position: relative;
-            background-color: #aed589;
-            display: inline-block;
-            max-width: 160px;
-            word-break: break-word;
-            &:after {
-                content: '';
-                background-image: url('/line-msg-send-after.png');
-                background-size: cover;
-                position: absolute;
-                top: 0;
-                right: -4px;
-                z-index: 1;
-                width: 13px;
-                height: 10px;
-            }
-        }
-    }
-`;

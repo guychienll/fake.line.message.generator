@@ -1,66 +1,62 @@
-import React from 'react';
-import styled from 'styled-components';
+import clsx from 'clsx';
+import React, { useState } from 'react';
 import { BiMicrophone } from 'react-icons/bi';
+import { FiCamera, FiPlus } from 'react-icons/fi';
 import { MdOutlineBrokenImage } from 'react-icons/md';
-import { FiPlus, FiCamera, FiImage } from 'react-icons/fi';
+import { PiSmiley } from 'react-icons/pi';
+import { v4 as uuid } from 'uuid';
+import { useLineStore } from '../../pages';
 
 export const LineFooter = (props) => {
-    const { unSendMessage = '' } = props;
+    const store = useLineStore((state) => state);
+    const { player, messages, setMessages } = store;
+    const [message, setMessage] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const _msg = {
+            id: uuid(),
+            type: player.type,
+            read: null,
+            time: new Date(),
+            message: message,
+            data: {
+                player: {
+                    ...player,
+                },
+            },
+        };
+        const nextMessages = [...messages, _msg];
+        setMessages(nextMessages);
+        setMessage('');
+    };
+
     return (
-        <StyledLineFooter>
+        <form
+            onSubmit={handleSubmit}
+            className="relative flex h-[37px] items-center justify-between bg-[#ffffff] px-1"
+        >
             <FiPlus size={20} />
             <FiCamera size={20} />
             <MdOutlineBrokenImage size={20} />
-            <div className="input-area">
-                {unSendMessage ? (
-                    <div className="unsent-send-message">{unSendMessage}</div>
-                ) : (
-                    <div className="empty">Aa</div>
-                )}
+            <div>
+                <PiSmiley
+                    size={20}
+                    className="absolute right-9 top-[50%] translate-y-[-50%]"
+                />
+                <input
+                    className={clsx([
+                        `w-full max-w-[150px]  overflow-hidden whitespace-nowrap rounded-[75px] 
+                    bg-[#eeeeee] px-2 py-0.5 pr-6 text-sm placeholder:text-[#cccccc] focus:outline-none`,
+                    ])}
+                    placeholder="Aa"
+                    value={message}
+                    onChange={(e) => {
+                        setMessage(e.target.value);
+                    }}
+                />
             </div>
             <BiMicrophone size={20} />
-        </StyledLineFooter>
+        </form>
     );
 };
-
-const StyledLineFooter = styled.div`
-    width: 100%;
-    height: var(--line-footer-height);
-    padding: 0 5px;
-    justify-content: space-between;
-    background-color: #fff;
-    background-size: cover;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    position: relative;
-    & > .input-area {
-        position: relative;
-        width: 170px;
-        height: 80%;
-        background-color: #f5f5f5;
-        border-radius: 20px;
-
-        & > .unsent-send-message {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-            max-width: 130px;
-            overflow-x: hidden;
-            white-space: nowrap;
-        }
-        & > .empty {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            left: 15px;
-            font-size: 14px;
-            max-width: 130px;
-            overflow-x: hidden;
-            white-space: nowrap;
-            color: #cccbcc;
-        }
-    }
-`;

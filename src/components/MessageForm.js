@@ -1,102 +1,116 @@
 import {
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Row,
-  Select,
-} from "antd";
-import React, { useEffect } from "react";
-import moment from "moment";
-import { v4 } from "uuid";
-import { MESSAGE_TYPE, MESSAGE_TYPE_DISPLAY } from "../constants";
+    Button,
+    Checkbox,
+    Input,
+    Select,
+    SelectItem,
+    Textarea,
+} from '@nextui-org/react';
+import * as moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import { MESSAGE_TYPE, MESSAGE_TYPE_DISPLAY } from '../constants';
 
 export const MessageForm = (props) => {
-  const {
-    instance = null,
-    handleEditMessage,
-    messages,
-    resetMessageEditor,
-  } = props;
-  const [form] = Form.useForm();
+    const { instance = null, onSubmit } = props;
 
-  useEffect(() => {
-    form.setFieldsValue({
-      ...instance,
-      time: moment(instance?.time),
-    });
-  }, [form, instance]);
-
-  const onFinish = (values) => {
-    handleEditMessage(values);
-  };
-
-  return (
-    <Form
-      onFinish={onFinish}
-      form={form}
-      layout="vertical"
-      initialValues={{
-        id: instance?.id || v4(),
+    const [values, setValues] = useState({
+        id: instance?.id || uuid(),
         type: instance?.type || MESSAGE_TYPE.receiver,
         time: moment(instance?.time) || moment(new Date()),
-        read: instance?.read || null,
-        message: instance?.message || "",
-      }}
-    >
-      <Form.Item style={{ display: "none" }} name="id">
-        <Input />
-      </Form.Item>
-      <Form.Item name="type" label="欄位種類">
-        <Select>
-          {Object.values(MESSAGE_TYPE_DISPLAY).map((msgOpt, index) => (
-            <Select.Option key={index} value={msgOpt.value}>
-              {msgOpt.label}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item noStyle dependencies={["type"]}>
-        {({ getFieldsValue }) => {
-          const values = getFieldsValue();
-          const { type } = values;
-          return type === MESSAGE_TYPE.sender ? (
-            <Form.Item valuePropName="checked" name="read" label="已讀">
-              <Checkbox />
-            </Form.Item>
-          ) : null;
-        }}
-      </Form.Item>
-      <Form.Item name="time" label="時間">
-        <DatePicker showTime />
-      </Form.Item>
-      <Form.Item name="message" label="訊息">
-        <Input.TextArea />
-      </Form.Item>
-      <Row gutter={12}>
-        <Col>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              編輯
+        read: instance?.read || false,
+        message: instance?.message || '',
+    });
+
+    useEffect(() => {
+        setValues({
+            id: instance?.id || uuid(),
+            type: instance?.type || MESSAGE_TYPE.receiver,
+            time: moment(instance?.time) || moment(new Date()),
+            read: instance?.read || false,
+            message: instance?.message || '',
+        });
+    }, [instance]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setValues((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    return (
+        <form
+            className="flex flex-col gap-y-2"
+            onSubmit={(e) => {
+                e.preventDefault();
+                onSubmit(values);
+            }}
+        >
+            <Select
+                name="type"
+                label="欄位種類"
+                placeholder="請選擇欄位種類"
+                selectedKeys={[values.type]}
+                onChange={handleChange}
+            >
+                {Object.values(MESSAGE_TYPE_DISPLAY).map((opt) => {
+                    return (
+                        <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                        </SelectItem>
+                    );
+                })}
+            </Select>
+
+            {values.type === MESSAGE_TYPE.sender && (
+                <Checkbox
+                    name="read"
+                    isSelected={values.read}
+                    onChange={(e) => {
+                        setValues((prev) => ({
+                            ...prev,
+                            read: e.target.checked,
+                        }));
+                    }}
+                >
+                    已讀
+                </Checkbox>
+            )}
+
+            <Input
+                name="time"
+                type="datetime-local"
+                label="時間"
+                placeholder="請選擇時間"
+                value={values.time.format('YYYY-MM-DD HH:mm:ss')}
+                onChange={(e) => {
+                    const date = new Date(e.target.value);
+                    setValues((prev) => ({
+                        ...prev,
+                        time: moment(date),
+                    }));
+                }}
+            />
+
+            <Textarea
+                name="message"
+                value={values.message}
+                label="訊息"
+                placeholder="請輸入訊息"
+                onChange={handleChange}
+            />
+
+            <Button
+                fullWidth
+                size="sm"
+                color="primary"
+                type="submit"
+                variant="bordered"
+            >
+                編輯
             </Button>
-          </Form.Item>
-        </Col>
-        {messages.findIndex((msg) => msg.id === instance.id) > -1 && (
-          <Col>
-            <Form.Item>
-              <Button
-                type="outline"
-                htmlType="button"
-                onClick={resetMessageEditor}
-              >
-                取消選定
-              </Button>
-            </Form.Item>
-          </Col>
-        )}
-      </Row>
-    </Form>
-  );
+        </form>
+    );
 };

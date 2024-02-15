@@ -1,27 +1,38 @@
 {
-  "name": "fake-line-message-generator",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "antd": "^4.21.3",
-    "html2canvas": "^1.4.1",
-    "moment": "^2.29.3",
-    "next": "^12.1.7-canary.41",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-icons": "^4.4.0",
-    "styled-components": "^5.3.5",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "eslint": "8.17.0",
-    "eslint-config-next": "12.1.6",
-    "prettier": "^2.7.1"
-  }
+    "name": "fake-line-message-generator",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@nextui-org/react": "^2.2.9",
+        "antd": "^4.21.3",
+        "clsx": "^2.1.0",
+        "framer-motion": "^11.0.5",
+        "html-to-image": "^1.11.11",
+        "moment": "^2.29.3",
+        "next": "^14.1.0",
+        "react": "^18.2.0",
+        "react-beautiful-dnd": "^13.1.1",
+        "react-dom": "^18.2.0",
+        "react-icons": "^5.0.1",
+        "styled-components": "^5.3.5",
+        "uuid": "^8.3.2",
+        "zustand": "^4.5.0"
+    },
+    "devDependencies": {
+        "@types/node": "20.11.17",
+        "@types/react": "18.2.55",
+        "autoprefixer": "^10.4.17",
+        "eslint": "8.17.0",
+        "eslint-config-next": "^14.1.0",
+        "postcss": "^8.4.35",
+        "prettier": "^3.2.5",
+        "prettier-plugin-tailwindcss": "^0.5.11",
+        "tailwindcss": "^3.4.1"
+    }
 }

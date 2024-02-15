@@ -1,66 +1,72 @@
-import { Button, Form, Input, Upload } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
+import { Avatar, Input, Button } from '@nextui-org/react';
 
 export const ReceiverForm = (props) => {
     const { instance = null, handleEditReceiver } = props;
-    const [form] = Form.useForm();
+    const [values, setValues] = useState({
+        name: instance?.name || '',
+        avatar: instance?.avatar || '',
+    });
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setValues((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleFileChange = async (e) => {
+        const { files, name } = e.target;
+        const [file] = files;
+        setValues((prev) => ({
+            ...prev,
+            [name]: URL.createObjectURL(file),
+        }));
+    };
     return (
-        <Form
-            onFinish={(values) => {
+        <form
+            className="flex flex-col gap-y-4"
+            onSubmit={(e) => {
+                e.preventDefault();
                 handleEditReceiver(values);
             }}
-            form={form}
-            layout="vertical"
-            initialValues={{
-                name: instance?.name || '',
-                avatar: instance?.avatar || '',
-            }}
         >
-            <Form.Item name="name" label="接收者名稱">
-                <Input />
-            </Form.Item>
+            <Input
+                name="name"
+                label="接收者名稱"
+                placeholder="請入數接收者名稱"
+                onChange={handleChange}
+            />
 
-            <Form.Item name="avatar" label="大頭照">
-                <Input />
-            </Form.Item>
+            <Input
+                className="hidden"
+                name="avatar"
+                type="file"
+                id="file"
+                onInput={handleFileChange}
+            />
 
-            <Form.Item dependencies={['avatar']}>
-                {({ getFieldsValue }) => {
-                    return (
-                        <>
-                            <input
-                                style={{ marginBottom: 10 }}
-                                type={'file'}
-                                onChange={(e) => {
-                                    const { files } = e.target;
-                                    const [file] = files;
-                                    const s = URL.createObjectURL(file);
-                                    form.setFieldsValue({
-                                        avatar: s,
-                                    });
-                                }}
-                            />
-                            {getFieldsValue().avatar && (
-                                <img
-                                    style={{
-                                        objectFit: 'cover',
-                                        width: 100,
-                                        height: 100,
-                                    }}
-                                    src={getFieldsValue().avatar}
-                                    alt="receiver-avatar"
-                                />
-                            )}
-                        </>
-                    );
-                }}
-            </Form.Item>
-            <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    編輯
-                </Button>
-            </Form.Item>
-        </Form>
+            {values.avatar ? (
+                <label htmlFor="file">
+                    <Avatar
+                        src={values.avatar}
+                        alt="receiver avatar"
+                        className="h-[100px] w-[100px] cursor-pointer"
+                    />
+                </label>
+            ) : (
+                <label htmlFor="file">
+                    <Avatar
+                        src="/100x100.png"
+                        alt="receiver avatar"
+                        className="h-[100px] w-[100px] cursor-pointer"
+                    />
+                </label>
+            )}
+            <Button size="sm" color="primary" type="submit" variant="bordered">
+                編輯
+            </Button>
+        </form>
     );
 };

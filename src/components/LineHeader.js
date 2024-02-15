@@ -1,52 +1,41 @@
-import styled from 'styled-components';
 import React from 'react';
 import { FiChevronLeft, FiMenu, FiPhone, FiSearch } from 'react-icons/fi';
+import { GrMenu } from 'react-icons/gr';
+
+import { useLineStore } from '../../pages';
 
 export const LineHeader = (props) => {
-    const { receiver = {}, unReadCount = 0 } = props;
-    const { name } = receiver;
+    const store = useLineStore((state) => state);
+    const { channel, setChannel } = store;
     return (
-        <StyledLineHeader>
-            <div className="left">
+        <div className="flex h-[40px] w-[100%] items-center justify-between bg-[#8cabd9] px-1 font-bold">
+            <div className="left flex items-center text-[#202733] ">
                 <FiChevronLeft size={20} color="#202733" />
-                {unReadCount > 0 && (
-                    <div className="unread-message-count">
-                        {unReadCount > 99 ? '99+' : `${unReadCount}`}
+                {channel.unReadCount > 0 && (
+                    <div className="mr-2">
+                        {channel.unReadCount > 99
+                            ? '99+'
+                            : `${channel.unReadCount}`}
                     </div>
                 )}
-                <div className="receiver-name">{name}</div>
+                <input
+                    value={channel.name}
+                    className="max-w-[100px] bg-transparent"
+                    onChange={(e) => {
+                        const nextChannel = {
+                            ...channel,
+                            name: `${e.target.value}`,
+                        };
+                        setChannel(nextChannel);
+                    }}
+                />
             </div>
-            <div className="right">
+
+            <div className="right flex w-[75px] items-center justify-between">
                 <FiSearch size={17} />
                 <FiPhone size={17} />
-                <FiMenu size={17} />
+                <GrMenu size={17} />
             </div>
-        </StyledLineHeader>
+        </div>
     );
 };
-
-const StyledLineHeader = styled.div`
-    width: 100%;
-    height: var(--line-header-height);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 5px;
-    background-color: #8cabd9;
-    font-weight: bold;
-    & > .left {
-        display: flex;
-        align-items: center;
-        color: #202733;
-        & > .unread-message-count {
-            font-size: 14px;
-            margin-right: 10px;
-        }
-    }
-    & > .right {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 75px;
-    }
-`;
