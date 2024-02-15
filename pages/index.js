@@ -62,7 +62,7 @@ export const useLineStore = create((set) => {
                 data: {
                     player: {
                         type: MESSAGE_TYPE.sender,
-                        name: '小新',
+                        name: '小新 (Shin)',
                         avatar: '/hsin.jpg',
                     },
                 },

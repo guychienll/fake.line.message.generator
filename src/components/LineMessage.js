@@ -13,7 +13,7 @@ import { useIntl } from 'react-intl';
 export const LineMessage = (props) => {
     const store = useLineStore((state) => state);
     const [window, setWindow] = useState(false);
-    const { messages, setMessages } = store;
+    const { messages, setMessages, setPlayer } = store;
     const router = useRouter();
     const intl = useIntl();
     const t = intl.messages[router.locale];
@@ -96,6 +96,7 @@ export const LineMessage = (props) => {
                                                             MESSAGE_TYPE.sender && (
                                                             <Tooltip
                                                                 placement="right"
+                                                                className="px-2 py-2"
                                                                 content={
                                                                     <div className="flex flex-col gap-y-2">
                                                                         <Button
@@ -161,7 +162,14 @@ export const LineMessage = (props) => {
                                                                     ref={
                                                                         provided.innerRef
                                                                     }
-                                                                    className="mb-2 flex w-full cursor-pointer justify-end"
+                                                                    className="mb-2 flex w-full cursor-pointer justify-end hover:opacity-80"
+                                                                    onClick={() => {
+                                                                        setPlayer(
+                                                                            msg
+                                                                                .data
+                                                                                .player
+                                                                        );
+                                                                    }}
                                                                 >
                                                                     <div className="mr-1 flex flex-col items-end gap-y-1 self-end text-[10px] tracking-wide text-[#46556b]">
                                                                         <small>
@@ -192,6 +200,7 @@ export const LineMessage = (props) => {
                                                             MESSAGE_TYPE.receiver && (
                                                             <Tooltip
                                                                 placement="left"
+                                                                className="px-2 py-2"
                                                                 content={
                                                                     <div>
                                                                         <Button
@@ -227,7 +236,14 @@ export const LineMessage = (props) => {
                                                                     ref={
                                                                         provided.innerRef
                                                                     }
-                                                                    className="receiver mb-2 flex cursor-pointer self-start"
+                                                                    className="receiver mb-2 flex cursor-pointer self-start hover:opacity-80"
+                                                                    onClick={() => {
+                                                                        setPlayer(
+                                                                            msg
+                                                                                .data
+                                                                                .player
+                                                                        );
+                                                                    }}
                                                                 >
                                                                     <Avatar
                                                                         width={
