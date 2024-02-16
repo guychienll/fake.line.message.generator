@@ -11,6 +11,7 @@ const messages = {
 
 function MyApp({ Component, pageProps }) {
     const { locale } = useRouter();
+
     return (
         <IntlProvider locale={locale} messages={messages}>
             <Component {...pageProps} />

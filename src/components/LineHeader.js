@@ -1,10 +1,10 @@
 import React from 'react';
-import { FiChevronLeft, FiMenu, FiPhone, FiSearch } from 'react-icons/fi';
+import { FiChevronLeft, FiPhone, FiSearch } from 'react-icons/fi';
 import { GrMenu } from 'react-icons/gr';
 
 import { useLineStore } from '../../pages';
 
-export const LineHeader = (props) => {
+export const LineHeader = () => {
     const store = useLineStore((state) => state);
     const { channel, setChannel } = store;
     return (

@@ -7,7 +7,7 @@ import { PiSmiley } from 'react-icons/pi';
 import { v4 as uuid } from 'uuid';
 import { useLineStore } from '../../pages';
 
-export const LineFooter = (props) => {
+export const LineFooter = () => {
     const store = useLineStore((state) => state);
     const { player, messages, setMessages } = store;
     const [message, setMessage] = useState('');

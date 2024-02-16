@@ -80,8 +80,10 @@ export default function Home() {
     const t = intl.messages[router.locale];
 
     useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
+
     const store = useLineStore((state) => state);
     const { player, setPlayer, channel, setChannel } = store;
+
     const handleDownloadImage = async () => {
         const _html = document.getElementById('line');
         const dataUri = await html2Img.toPng(_html, {
@@ -152,7 +154,7 @@ export default function Home() {
                                 className="mr-3"
                                 isBordered
                                 radius="md"
-                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/LINE_New_App_Icon_%282020-12%29.png/800px-LINE_New_App_Icon_%282020-12%29.png"
+                                src="/line_logo.png"
                             />
                             <div>
                                 <div className="text-sm font-bold">LINE</div>
@@ -261,13 +263,11 @@ export default function Home() {
                                             'line.message.header.unread-message-count'
                                         ]
                                     }
+                                    size="sm"
                                     step={1}
                                     color="success"
-                                    showTooltip
                                     maxValue={100}
                                     minValue={0}
-                                    radius="full"
-                                    className="max-w-md"
                                     hideValue
                                     value={channel.unReadCount}
                                     onChange={(val) => {
