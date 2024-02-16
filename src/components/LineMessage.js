@@ -1,4 +1,4 @@
-import { Avatar, Button, Tooltip } from '@nextui-org/react';
+import { Avatar, Button, Tooltip, Image } from '@nextui-org/react';
 import clsx from 'clsx';
 import * as moment from 'moment';
 import { useRouter } from 'next/router';
@@ -8,7 +8,8 @@ import { FaEye } from 'react-icons/fa';
 import { IoTrashBinOutline } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { useLineStore } from '../../pages';
-import { MESSAGE_TYPE } from '../constants';
+import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../constants';
+import { FiClock } from 'react-icons/fi';
 
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
@@ -108,6 +109,33 @@ const MessageBubble = ({ msg, provided }) => {
 
     const { messages, setMessages, setPlayer } = store;
 
+    const handleDeleteMsg = (message) => {
+        const nextMessages = messages.filter((_msg) => {
+            if (message.id !== _msg.id) {
+                return _msg;
+            }
+        });
+        setMessages(nextMessages);
+    };
+
+    const handleRead = (message) => {
+        const targetIdx = messages.findIndex((_msg) => _msg.id === message.id);
+        const nextMessages = [...messages];
+        nextMessages[targetIdx].read = !messages[targetIdx].read;
+        setMessages(nextMessages);
+    };
+
+    const handleTimeChange = (e, message) => {
+        const { value } = e.target;
+        const formatDate = moment(value).format('YYYY-MM-DD HH:mm:ss');
+
+        const targetIdx = messages.findIndex((_msg) => _msg.id === message.id);
+        const nextMessages = [...messages];
+
+        nextMessages[targetIdx].time = formatDate;
+        setMessages(nextMessages);
+    };
+
     const deleteBtn = (
         <Button
             color="danger"
@@ -132,22 +160,6 @@ const MessageBubble = ({ msg, provided }) => {
         </Button>
     );
 
-    const handleDeleteMsg = (message) => {
-        const nextMessages = messages.filter((_msg) => {
-            if (message.id !== _msg.id) {
-                return _msg;
-            }
-        });
-        setMessages(nextMessages);
-    };
-
-    const handleRead = (message) => {
-        const targetIdx = messages.findIndex((_msg) => _msg.id === message.id);
-        const nextMessages = [...messages];
-        nextMessages[targetIdx].read = !messages[targetIdx].read;
-        setMessages(nextMessages);
-    };
-
     if (msg.type === MESSAGE_TYPE.sender) {
         return (
             <div>
@@ -156,9 +168,20 @@ const MessageBubble = ({ msg, provided }) => {
                         placement="right"
                         className="px-2 py-2"
                         content={
-                            <div className="flex flex-col gap-y-2">
-                                {deleteBtn}
-                                {readBtn}
+                            <div className="flex flex-col gap-y-3">
+                                <div className="flex gap-x-2">
+                                    {deleteBtn}
+                                    {readBtn}
+                                </div>
+                                <input
+                                    type="datetime-local"
+                                    value={moment(msg.time).format(
+                                        'YYYY-MM-DD HH:mm:ss'
+                                    )}
+                                    onChange={(e) => {
+                                        handleTimeChange(e, msg);
+                                    }}
+                                />
                             </div>
                         }
                     >
@@ -182,9 +205,18 @@ const MessageBubble = ({ msg, provided }) => {
                                 </small>
                             </div>
 
-                            <div className="message relative w-full max-w-[180px] break-words rounded-[13px] bg-[#aed589] px-3 py-2 text-sm text-[#000]">
-                                {msg.message}
-                            </div>
+                            {msg.variant === MESSAGE_VARIANT.text && (
+                                <div className="message relative  max-w-[180px] break-words rounded-[13px] bg-[#aed589] px-3 py-2 text-sm text-[#000]">
+                                    {msg.message}
+                                </div>
+                            )}
+                            {msg.variant === MESSAGE_VARIANT.image && (
+                                <Image
+                                    src={msg.message}
+                                    className="relative w-full max-w-[180px] rounded-[13px]  object-cover text-sm"
+                                    alt="sender upload image"
+                                />
+                            )}
                         </div>
                     </Tooltip>
                 )}
@@ -198,7 +230,20 @@ const MessageBubble = ({ msg, provided }) => {
                 <Tooltip
                     placement="left"
                     className="px-2 py-2"
-                    content={<div>{deleteBtn}</div>}
+                    content={
+                        <div className="flex flex-col gap-y-3">
+                            <div className="flex gap-x-2">{deleteBtn}</div>
+                            <input
+                                type="datetime-local"
+                                value={moment(msg.time).format(
+                                    'YYYY-MM-DD HH:mm:ss'
+                                )}
+                                onChange={(e) => {
+                                    handleTimeChange(e, msg);
+                                }}
+                            />
+                        </div>
+                    }
                 >
                     <div
                         {...provided.draggableProps}
@@ -221,9 +266,18 @@ const MessageBubble = ({ msg, provided }) => {
                             <div className="mb-0.5 text-xs">
                                 {msg.data.player.name}
                             </div>
-                            <div className="message relative w-full  break-words rounded-[13px] bg-[#ffffff] px-3 py-2 text-sm text-[#000]">
-                                {msg.message}
-                            </div>
+                            {msg.variant === MESSAGE_VARIANT.text && (
+                                <div className="relative w-full  break-words rounded-[13px] bg-[#ffffff] px-3 py-2 text-sm text-[#000]">
+                                    {msg.message}
+                                </div>
+                            )}
+                            {msg.variant === MESSAGE_VARIANT.image && (
+                                <Image
+                                    src={msg.message}
+                                    className="relative w-full max-w-[180px] rounded-[13px]  object-cover text-sm "
+                                    alt="receiver upload image"
+                                />
+                            )}
                         </div>
                         <div className="ml-1 self-end  text-[10px] tracking-wide text-[#46556b]">
                             <small className="time">

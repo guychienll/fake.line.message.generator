@@ -6,13 +6,13 @@ import {
     CardFooter,
     CardHeader,
     Chip,
+    Link,
     Navbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
     Slider,
     Switch,
-    Link,
 } from '@nextui-org/react';
 import * as html2Img from 'html-to-image';
 import * as moment from 'moment';
@@ -24,7 +24,7 @@ import { create } from 'zustand';
 import { LineFooter } from '../src/components/LineFooter';
 import { LineHeader } from '../src/components/LineHeader';
 import { LineMessage } from '../src/components/LineMessage';
-import { MESSAGE_TYPE } from '../src/constants';
+import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../src/constants';
 import useGoogleAnalytics from '../src/hooks/useGA';
 
 export const useLineStore = create((set) => {
@@ -43,6 +43,7 @@ export const useLineStore = create((set) => {
                 id: v4(),
                 type: MESSAGE_TYPE.receiver,
                 read: null,
+                variant: MESSAGE_VARIANT.text,
                 time: new Date('2022-06-18 08:00'),
                 message: `小新，今天要出去玩嗎？\n Shin, do you want to go out to play today?`,
                 data: {
@@ -58,6 +59,7 @@ export const useLineStore = create((set) => {
                 type: MESSAGE_TYPE.sender,
                 read: null,
                 time: new Date('2022-06-18 08:02'),
+                variant: MESSAGE_VARIANT.text,
                 message: `好哇，我們公園見。\n OK, see you in the park.`,
                 data: {
                     player: {
