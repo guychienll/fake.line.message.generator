@@ -32,6 +32,7 @@ import { LineMessage } from '../src/components/LineMessage';
 import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../src/constants';
 import useGoogleAnalytics from '../src/hooks/useGA';
 import Joyride from 'react-joyride';
+import { track } from '../src/utils/tracking';
 
 export const useLineStore = create((set) => {
     return {
@@ -86,13 +87,11 @@ export default function Home() {
     const router = useRouter();
     const intl = useIntl();
     const t = intl.messages[router.locale];
-    const [window, setWindow] = useState(false);
-
-    useEffect(() => {
-        setWindow(true);
-    }, []);
-
+    const [canMount, setCanMount] = useState(false);
     useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
+    useEffect(() => {
+        setCanMount(true);
+    }, []);
 
     const store = useLineStore((state) => state);
     const { player, setPlayer, channel, setChannel } = store;
@@ -122,6 +121,11 @@ export default function Home() {
         document.body.appendChild(linkElem);
         linkElem.click();
         linkElem.remove();
+
+        track('event', 'export', {
+            event_category: 'click',
+            event_label: '圖片輸出',
+        });
     };
 
     const map = {
@@ -300,7 +304,7 @@ export default function Home() {
                         </div>
                     </CardFooter>
                 </Card>
-                {window && (
+                {canMount && (
                     <Joyride
                         run={true}
                         continuous

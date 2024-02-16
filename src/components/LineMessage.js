@@ -9,23 +9,28 @@ import { IoTrashBinOutline } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { useLineStore } from '../../pages';
 import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../constants';
+import { track } from '../utils/tracking';
 
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
-    const [window, setWindow] = useState(false);
+    const [canMount, setIsCanMount] = useState(false);
     const { messages, setMessages } = store;
     const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
-        setWindow(true);
+        setIsCanMount(true);
     }, []);
 
-    if (!window) {
+    if (!canMount) {
         return null;
     }
 
     const handleDragStart = () => {
         setIsDragging(true);
+        track('event', 'drag_message', {
+            event_category: 'edit',
+            event_label: '拖拉訊息',
+        });
     };
 
     const handleDragEnd = (e) => {
@@ -115,6 +120,10 @@ const MessageBubble = ({ msg, provided }) => {
             }
         });
         setMessages(nextMessages);
+        track('event', 'delete_message', {
+            event_category: 'edit',
+            event_label: '刪除訊息',
+        });
     };
 
     const handleRead = (message) => {
@@ -122,6 +131,10 @@ const MessageBubble = ({ msg, provided }) => {
         const nextMessages = [...messages];
         nextMessages[targetIdx].read = !messages[targetIdx].read;
         setMessages(nextMessages);
+        track('event', 'read_message', {
+            event_category: 'edit',
+            event_label: '已讀訊息',
+        });
     };
 
     const handleTimeChange = (e, message) => {
@@ -133,6 +146,10 @@ const MessageBubble = ({ msg, provided }) => {
 
         nextMessages[targetIdx].time = formatDate;
         setMessages(nextMessages);
+        track('event', 'change_message_time', {
+            event_category: 'edit',
+            event_label: '更改訊息時間',
+        });
     };
 
     const deleteBtn = (

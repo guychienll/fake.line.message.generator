@@ -7,6 +7,7 @@ import { PiSmiley } from 'react-icons/pi';
 import { v4 as uuid } from 'uuid';
 import { useLineStore } from '../../pages';
 import { MESSAGE_VARIANT } from '../constants';
+import { track } from '../utils/tracking';
 
 export const LineFooter = () => {
     const store = useLineStore((state) => state);
@@ -31,6 +32,10 @@ export const LineFooter = () => {
         const nextMessages = [...messages, _msg];
         setMessages(nextMessages);
         setMessage('');
+        track('event', 'send_message', {
+            event_category: 'create',
+            event_label: '新增訊息',
+        });
     };
 
     const handleUploadImage = (e) => {
@@ -53,6 +58,10 @@ export const LineFooter = () => {
         };
         const nextMessages = [...messages, _msg];
         setMessages(nextMessages);
+        track('event', 'upload_image', {
+            event_category: 'create',
+            event_label: '新增圖片訊息',
+        });
     };
 
     return (
