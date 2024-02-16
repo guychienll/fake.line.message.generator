@@ -1,4 +1,4 @@
-import { Avatar, Button, Tooltip, Image } from '@nextui-org/react';
+import { Avatar, Button, Image, Tooltip } from '@nextui-org/react';
 import clsx from 'clsx';
 import * as moment from 'moment';
 import { useRouter } from 'next/router';
@@ -9,7 +9,6 @@ import { IoTrashBinOutline } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { useLineStore } from '../../pages';
 import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../constants';
-import { FiClock } from 'react-icons/fi';
 
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
