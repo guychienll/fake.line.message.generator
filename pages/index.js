@@ -131,7 +131,7 @@ export default function Home() {
 
     return (
         <div className="min-h-dvg h-dvh">
-            <Navbar isBordered isBlurred={false}>
+            <Navbar isBlurred={true}>
                 <NavbarBrand>
                     <h1 className="font-bold text-inherit">
                         Fake Line Message Generator
@@ -162,12 +162,7 @@ export default function Home() {
                     </NavbarItem>
                 </NavbarContent>
             </Navbar>
-            <div
-                style={{
-                    height: 'calc(100% - 4rem)',
-                }}
-                className="flex h-full items-center justify-center"
-            >
+            <div className="flex min-h-full items-center justify-center py-10">
                 <Card className="w-[300px] py-2">
                     <CardHeader className="flex justify-between">
                         <div className="flex">
