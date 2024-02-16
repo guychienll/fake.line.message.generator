@@ -6,18 +6,23 @@ import {
     CardFooter,
     CardHeader,
     Chip,
-    Link,
+    Image as NextUiImage,
     Navbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
     Slider,
     Switch,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
 } from '@nextui-org/react';
+
 import * as html2Img from 'html-to-image';
 import * as moment from 'moment';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { v4 } from 'uuid';
 import { create } from 'zustand';
@@ -26,6 +31,7 @@ import { LineHeader } from '../src/components/LineHeader';
 import { LineMessage } from '../src/components/LineMessage';
 import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../src/constants';
 import useGoogleAnalytics from '../src/hooks/useGA';
+import Joyride from 'react-joyride';
 
 export const useLineStore = create((set) => {
     return {
@@ -80,6 +86,11 @@ export default function Home() {
     const router = useRouter();
     const intl = useIntl();
     const t = intl.messages[router.locale];
+    const [window, setWindow] = useState(false);
+
+    useEffect(() => {
+        setWindow(true);
+    }, []);
 
     useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
 
@@ -95,7 +106,7 @@ export default function Home() {
             pixelRatio: 1,
         });
 
-        const image = new window.Image();
+        const image = new Image();
         image.src = dataUri;
 
         const url = image.src.replace(
@@ -127,18 +138,27 @@ export default function Home() {
                     </h1>
                 </NavbarBrand>
                 <NavbarContent justify="end">
-                    <NavbarItem className="flex gap-x-2">
-                        {[...router.locales].sort().map((locale) => {
-                            return (
-                                <Link
-                                    key={locale}
-                                    href={`/${locale}`}
-                                    locale={locale}
-                                >
-                                    {map[locale]}
-                                </Link>
-                            );
-                        })}
+                    <NavbarItem id="translation" className="flex gap-x-2">
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button variant="bordered">
+                                    {map[router.locale]}
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label="Static Actions">
+                                {[...router.locales].sort().map((locale) => {
+                                    return (
+                                        <DropdownItem
+                                            key={locale}
+                                            href={`/${locale}`}
+                                            locale={locale}
+                                        >
+                                            {map[locale]}
+                                        </DropdownItem>
+                                    );
+                                })}
+                            </DropdownMenu>
+                        </Dropdown>
                     </NavbarItem>
                 </NavbarContent>
             </Navbar>
@@ -175,6 +195,7 @@ export default function Home() {
                             className="hover:!text-[#ffffff]"
                             htmlType="button"
                             onClick={handleDownloadImage}
+                            id="export-btn"
                         >
                             {t['line.card.header.export']}
                         </Button>
@@ -284,6 +305,56 @@ export default function Home() {
                         </div>
                     </CardFooter>
                 </Card>
+                {window && (
+                    <Joyride
+                        run={true}
+                        continuous
+                        steps={[
+                            {
+                                target: '#translation',
+                                content: (
+                                    <div className="grid place-items-center">
+                                        <NextUiImage
+                                            src="/steps/step1.gif"
+                                            alt="step1"
+                                        />
+                                    </div>
+                                ),
+                            },
+                            {
+                                target: '#line',
+                                content: (
+                                    <div className="grid place-items-center">
+                                        <NextUiImage
+                                            src="/steps/step2.gif"
+                                            alt="step2"
+                                        />
+                                    </div>
+                                ),
+                            },
+                            {
+                                target: '#export-btn',
+                                content: (
+                                    <div className="grid place-items-center gap-y-3">
+                                        <NextUiImage
+                                            src="/steps/step3.gif"
+                                            alt="step3"
+                                        />
+                                    </div>
+                                ),
+                            },
+                        ]}
+                        styles={{
+                            options: {
+                                arrowColor: '#ffffff',
+                                backgroundColor: '#ffffff',
+                                overlayColor: 'rgba(0,0, 0, 0.4)',
+                                primaryColor: '#222',
+                                textColor: '#222',
+                            },
+                        }}
+                    />
+                )}
             </div>
         </div>
     );

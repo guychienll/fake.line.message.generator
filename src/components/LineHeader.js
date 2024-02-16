@@ -20,7 +20,7 @@ export const LineHeader = () => {
                 )}
                 <input
                     value={channel.name}
-                    className="max-w-[135px] bg-transparent"
+                    className="channel-name max-w-[135px] bg-transparent"
                     onChange={(e) => {
                         const nextChannel = {
                             ...channel,
