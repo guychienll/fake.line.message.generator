@@ -134,7 +134,7 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-dvg h-dvh">
+        <div className="min-h-dvh h-dvh">
             <Navbar isBlurred={true}>
                 <NavbarBrand>
                     <h1 className="font-bold text-inherit">
@@ -166,7 +166,7 @@ export default function Home() {
                     </NavbarItem>
                 </NavbarContent>
             </Navbar>
-            <div className="flex min-h-full items-center justify-center py-10">
+            <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center py-10">
                 <Card className="w-[300px] py-2">
                     <CardHeader className="flex justify-between">
                         <div className="flex">
