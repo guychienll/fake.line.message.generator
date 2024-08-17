@@ -3,20 +3,19 @@ import {
     Button,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
     Chip,
-    Image as NextUiImage,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
     Navbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
+    Image as NextUiImage,
     Slider,
-    Switch,
-    Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownItem,
+    Switch
 } from '@nextui-org/react';
 
 import * as html2Img from 'html-to-image';
@@ -24,6 +23,7 @@ import * as moment from 'moment';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
+import Joyride from 'react-joyride';
 import { v4 } from 'uuid';
 import { create } from 'zustand';
 import { LineFooter } from '../src/components/LineFooter';
@@ -31,7 +31,6 @@ import { LineHeader } from '../src/components/LineHeader';
 import { LineMessage } from '../src/components/LineMessage';
 import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../src/constants';
 import useGoogleAnalytics from '../src/hooks/useGA';
-import Joyride from 'react-joyride';
 import { track } from '../src/utils/tracking';
 
 export const useLineStore = create((set) => {
