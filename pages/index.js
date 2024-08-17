@@ -44,6 +44,7 @@ export const useLineStore = create((set) => {
         channel: {
             name: '春日部防衛隊 (KB)',
             unReadCount: 32,
+            viewportHeight: 420,
         },
         messages: [
             {
@@ -134,7 +135,7 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-dvh h-dvh">
+        <div className="h-dvh min-h-dvh">
             <Navbar isBlurred={true}>
                 <NavbarBrand>
                     <h1 className="font-bold text-inherit">
@@ -199,14 +200,7 @@ export default function Home() {
                             {t['line.card.header.export']}
                         </Button>
                     </CardHeader>
-                    <CardBody>
-                        <div className="h-[100%] w-auto" id="line">
-                            <LineHeader />
-                            <LineMessage />
-                            <LineFooter />
-                        </div>
-                    </CardBody>
-                    <CardFooter className="flex flex-col items-start gap-y-2">
+                    <CardBody className="flex flex-col items-start gap-y-2">
                         <div className="flex w-full flex-col gap-y-3 px-2">
                             <div className="flex items-center">
                                 <div className="flex items-center gap-x-3">
@@ -242,7 +236,7 @@ export default function Home() {
                                         <input
                                             value={player.name}
                                             type="text"
-                                            className="text-sm "
+                                            className="text-sm"
                                             onChange={(e) => {
                                                 const nextPlayer = {
                                                     ...player,
@@ -280,6 +274,7 @@ export default function Home() {
                             </div>
                             <div className="flex w-full flex-col">
                                 <Slider
+                                    className="mb-2"
                                     label={
                                         t[
                                             'line.message.header.unread-message-count'
@@ -300,9 +295,37 @@ export default function Home() {
                                         setChannel(nextChannel);
                                     }}
                                 />
+                                <Slider
+                                    label={
+                                        t[
+                                            'line.message.channel.viewport-height'
+                                        ]
+                                    }
+                                    size="sm"
+                                    step={1}
+                                    color="success"
+                                    maxValue={1200}
+                                    minValue={420}
+                                    hideValue
+                                    value={channel.viewportHeight}
+                                    onChange={(val) => {
+                                        const nextChannel = {
+                                            ...channel,
+                                            viewportHeight: val,
+                                        };
+                                        setChannel(nextChannel);
+                                    }}
+                                />
                             </div>
                         </div>
-                    </CardFooter>
+                    </CardBody>
+                    <CardBody>
+                        <div className="h-[100%] w-auto" id="line">
+                            <LineHeader />
+                            <LineMessage />
+                            <LineFooter />
+                        </div>
+                    </CardBody>
                 </Card>
                 {canMount && (
                     <Joyride

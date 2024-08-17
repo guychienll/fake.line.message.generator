@@ -2,5 +2,6 @@
     "line.card.header.version": "Version.",
     "line.card.header.export": "Export",
     "line.message.header.unread-message-count": "Unread Message Count",
+    "line.message.channel.viewport-height": "Message Window Height",
     "line.message.body.read": "Read"
 }

@@ -14,7 +14,7 @@ import { track } from '../utils/tracking';
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
     const [canMount, setIsCanMount] = useState(false);
-    const { messages, setMessages } = store;
+    const { messages, setMessages, channel } = store;
     const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
@@ -74,12 +74,15 @@ export const LineMessage = () => {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                         className={clsx([
-                            'flex h-[420px] w-auto  flex-col  overflow-auto bg-[#8CABD9] p-1 scrollbar-hide',
+                            'min-height-[420px] flex w-auto flex-col  overflow-auto bg-[#8CABD9] p-1 scrollbar-hide',
                             {
                                 'bg-orange-200': isDragging,
                                 'opacity-70': isDragging,
                             },
                         ])}
+                        style={{
+                            height: channel.viewportHeight,
+                        }}
                     >
                         {messages
                             .sort((a, b) => moment(a.time).diff(moment(b.time)))

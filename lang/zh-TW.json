@@ -2,5 +2,6 @@
     "line.card.header.version": "版本.",
     "line.card.header.export": "匯出",
     "line.message.header.unread-message-count": "未讀訊息數量",
+    "line.message.channel.viewport-height": "訊息視窗高度",
     "line.message.body.read": "已讀"
 }
