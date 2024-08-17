@@ -35,6 +35,7 @@ export const LineFooter = () => {
         track('event', 'send_message', {
             event_category: 'create',
             event_label: '新增訊息',
+            value: _msg.message,
         });
     };
 
