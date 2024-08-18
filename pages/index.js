@@ -15,7 +15,13 @@ import {
     NavbarItem,
     Image as NextUiImage,
     Slider,
-    Switch
+    Switch,
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    useDisclosure,
 } from '@nextui-org/react';
 
 import * as html2Img from 'html-to-image';
@@ -83,11 +89,15 @@ export const useLineStore = create((set) => {
     };
 });
 
+const DISCLAIMER_CONFIRM_KEY = 'is-confirm-disclaimer';
+
 export default function Home() {
     const router = useRouter();
     const intl = useIntl();
     const t = intl.messages[router.locale];
     const [canMount, setCanMount] = useState(false);
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
     useGoogleAnalytics({ gaId: 'G-CMRT9XGJ3D' });
     useEffect(() => {
         setCanMount(true);
@@ -96,7 +106,7 @@ export default function Home() {
     const store = useLineStore((state) => state);
     const { player, setPlayer, channel, setChannel } = store;
 
-    const handleDownloadImage = async () => {
+    async function downloadImg() {
         const _html = document.getElementById('line');
         const dataUri = await html2Img.toPng(_html, {
             canvasHeight: _html.clientHeight * 2.5,
@@ -126,6 +136,23 @@ export default function Home() {
             event_category: 'click',
             event_label: '圖片輸出',
         });
+    }
+
+    const handleDownloadImage = async () => {
+        const isConfirmDisclaimer = window.localStorage.getItem(
+            DISCLAIMER_CONFIRM_KEY
+        );
+        if (!isConfirmDisclaimer) {
+            onOpen();
+            return;
+        }
+        await downloadImg();
+    };
+
+    const onConfirmDisclaimer = async (onClose) => {
+        window.localStorage.setItem(DISCLAIMER_CONFIRM_KEY, 'true');
+        onClose();
+        await handleDownloadImage();
     };
 
     const map = {
@@ -377,6 +404,36 @@ export default function Home() {
                     />
                 )}
             </div>
+            <Modal
+                isDismissable={false}
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">
+                                {t['site.disclaimer']}
+                            </ModalHeader>
+                            <ModalBody>
+                                <p className="whitespace-pre-wrap leading-6">
+                                    {t['site.disclaimer.content']}
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    color="primary"
+                                    onPress={() => {
+                                        onConfirmDisclaimer(onClose);
+                                    }}
+                                >
+                                    {t['site.disclaimer.confirm']}
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
         </div>
     );
 }
