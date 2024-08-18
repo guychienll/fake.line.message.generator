@@ -162,6 +162,37 @@ export default function Home() {
 
     return (
         <div className="h-dvh min-h-dvh">
+            <Modal
+                isDismissable={false}
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                placement='top-center'
+            >
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">
+                                {t['site.disclaimer']}
+                            </ModalHeader>
+                            <ModalBody>
+                                <p className="whitespace-pre-wrap leading-6">
+                                    {t['site.disclaimer.content']}
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    color="primary"
+                                    onPress={() => {
+                                        onConfirmDisclaimer(onClose);
+                                    }}
+                                >
+                                    {t['site.disclaimer.confirm']}
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
             <Navbar isBlurred={true}>
                 <NavbarBrand>
                     <h1 className="font-bold text-inherit">
@@ -404,36 +435,6 @@ export default function Home() {
                     />
                 )}
             </div>
-            <Modal
-                isDismissable={false}
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-            >
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader className="flex flex-col gap-1">
-                                {t['site.disclaimer']}
-                            </ModalHeader>
-                            <ModalBody>
-                                <p className="whitespace-pre-wrap leading-6">
-                                    {t['site.disclaimer.content']}
-                                </p>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    color="primary"
-                                    onPress={() => {
-                                        onConfirmDisclaimer(onClose);
-                                    }}
-                                >
-                                    {t['site.disclaimer.confirm']}
-                                </Button>
-                            </ModalFooter>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
         </div>
     );
 }
