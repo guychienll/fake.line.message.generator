@@ -1,7 +1,6 @@
 import {
     Avatar,
     Button,
-    Image,
     Tooltip,
     Modal,
     useDisclosure,
@@ -249,7 +248,8 @@ const MessageBubble = ({ msg, provided }) => {
                                 </div>
                             )}
                             {msg.variant === MESSAGE_VARIANT.image && (
-                                <Image
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
                                     src={msg.message}
                                     className="relative w-full max-w-[180px] rounded-[13px]  object-cover text-sm"
                                     alt="sender upload image"
@@ -284,6 +284,7 @@ const MessageBubble = ({ msg, provided }) => {
                         <Avatar
                             width={30}
                             height={30}
+                            ImgComponent={Image}
                             alt="receiver-avatar"
                             size="sm"
                             className="mr-2"
@@ -299,7 +300,8 @@ const MessageBubble = ({ msg, provided }) => {
                                 </div>
                             )}
                             {msg.variant === MESSAGE_VARIANT.image && (
-                                <Image
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
                                     src={msg.message}
                                     className="relative w-full max-w-[180px] rounded-[13px]  object-cover text-sm "
                                     alt="receiver upload image"
@@ -317,3 +319,8 @@ const MessageBubble = ({ msg, provided }) => {
         </div>
     );
 };
+
+function Image(props) {
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    return <img {...props} />;
+}

@@ -113,7 +113,7 @@ export default function Home() {
         const temp = messageContainer.style.height;
         messageContainer.style.height = messageContainer.scrollHeight + 'px';
         const at = document.createElement('div');
-        at.className = 'absolute bottom-1 right-1 text-bold text-[#000]';
+        at.className = 'absolute bottom-1 right-1 text-bold text-[#000] text-[8px]';
         at.innerHTML = '@flmg';
         messageContainer.appendChild(at);
 
@@ -246,6 +246,7 @@ export default function Home() {
                     <CardHeader className="flex justify-between">
                         <div className="flex">
                             <Avatar
+                                ImgComponent={NativeImage}
                                 color="success"
                                 className="mr-3"
                                 isBordered
@@ -307,6 +308,7 @@ export default function Home() {
                                         htmlFor="avatar"
                                         isBordered
                                         className="cursor-pointer text-[#ffffff]"
+                                        ImgComponent={NativeImage}
                                         color={
                                             player.type === MESSAGE_TYPE.sender
                                                 ? 'success'
@@ -434,4 +436,9 @@ export default function Home() {
             </div>
         </div>
     );
+}
+
+function NativeImage(props) {
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    return <img {...props} />;
 }
