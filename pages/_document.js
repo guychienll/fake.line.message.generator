@@ -27,6 +27,10 @@ export default function Document() {
                 <meta name="twitter:title" content={title} />
                 <meta name="twitter:description" content={description} />
                 <meta name="twitter:image" content="/line_logo.png" />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1, maximum-scale=1"
+                />
             </Head>
             <body>
                 <NextUIProvider>
