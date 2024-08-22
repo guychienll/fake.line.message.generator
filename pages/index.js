@@ -22,6 +22,7 @@ import {
     ModalBody,
     ModalFooter,
     useDisclosure,
+    CardFooter,
 } from '@nextui-org/react';
 
 import * as html2Img from 'html-to-image';
@@ -49,7 +50,6 @@ export const useLineStore = create((set) => {
         channel: {
             name: '春日部防衛隊 (KB)',
             unReadCount: 32,
-            viewportHeight: 420,
         },
         messages: [
             {
@@ -108,12 +108,22 @@ export default function Home() {
 
     async function downloadImg() {
         const _html = document.getElementById('line');
+        const messageContainer = _html.querySelector('#message-container');
+        const temp = messageContainer.style.height;
+        messageContainer.style.height = messageContainer.scrollHeight + 'px';
+        const at = document.createElement('div');
+        at.className = 'absolute bottom-1 right-1 text-bold text-[#000]';
+        at.innerHTML = '@flmg';
+        messageContainer.appendChild(at);
+
         const dataUri = await html2Img.toPng(_html, {
             canvasHeight: _html.clientHeight * 2.5,
             canvasWidth: _html.clientWidth * 2.5,
             quality: 1,
             pixelRatio: 1,
         });
+        at.remove();
+        messageContainer.style.height = temp;
 
         const image = new Image();
         image.src = dataUri;
@@ -166,7 +176,7 @@ export default function Home() {
                 isDismissable={false}
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
-                placement='top-center'
+                placement="top-center"
             >
                 <ModalContent>
                     {(onClose) => (
@@ -257,7 +267,15 @@ export default function Home() {
                             {t['line.card.header.export']}
                         </Button>
                     </CardHeader>
-                    <CardBody className="flex flex-col items-start gap-y-2">
+
+                    <CardBody>
+                        <div className="h-[100%] w-auto" id="line">
+                            <LineHeader />
+                            <LineMessage />
+                            <LineFooter />
+                        </div>
+                    </CardBody>
+                    <CardFooter className="flex flex-col items-start gap-y-2">
                         <div className="flex w-full flex-col gap-y-3 px-2">
                             <div className="flex items-center">
                                 <div className="flex items-center gap-x-3">
@@ -352,37 +370,9 @@ export default function Home() {
                                         setChannel(nextChannel);
                                     }}
                                 />
-                                <Slider
-                                    label={
-                                        t[
-                                            'line.message.channel.viewport-height'
-                                        ]
-                                    }
-                                    size="sm"
-                                    step={1}
-                                    color="success"
-                                    maxValue={1200}
-                                    minValue={420}
-                                    hideValue
-                                    value={channel.viewportHeight}
-                                    onChange={(val) => {
-                                        const nextChannel = {
-                                            ...channel,
-                                            viewportHeight: val,
-                                        };
-                                        setChannel(nextChannel);
-                                    }}
-                                />
                             </div>
                         </div>
-                    </CardBody>
-                    <CardBody>
-                        <div className="h-[100%] w-auto" id="line">
-                            <LineHeader />
-                            <LineMessage />
-                            <LineFooter />
-                        </div>
-                    </CardBody>
+                    </CardFooter>
                 </Card>
                 {canMount && (
                     <Joyride

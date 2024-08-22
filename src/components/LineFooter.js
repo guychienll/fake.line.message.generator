@@ -16,6 +16,10 @@ export const LineFooter = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (message === '') {
+            return;
+        }
+
         const _msg = {
             id: uuid(),
             type: player.type,
@@ -36,6 +40,11 @@ export const LineFooter = () => {
             event_category: 'create',
             event_label: '新增訊息',
         });
+        setTimeout(() => {
+            const messageContainer =
+                document.querySelector('#message-container');
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }, 0);
     };
 
     const handleUploadImage = (e) => {

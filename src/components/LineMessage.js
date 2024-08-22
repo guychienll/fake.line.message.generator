@@ -71,18 +71,16 @@ export const LineMessage = () => {
             <Droppable droppableId="droppable-id">
                 {(provided) => (
                     <div
+                        id="message-container"
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                         className={clsx([
-                            'min-height-[420px] flex w-auto flex-col  overflow-auto bg-[#8CABD9] p-1 scrollbar-hide',
+                            'min-height-[420px] relative flex h-[420px] w-auto  flex-col overflow-auto bg-[#8CABD9] p-1 pb-6 scrollbar-hide',
                             {
                                 'bg-orange-200': isDragging,
                                 'opacity-70': isDragging,
                             },
                         ])}
-                        style={{
-                            height: channel.viewportHeight,
-                        }}
                     >
                         {messages
                             .sort((a, b) => moment(a.time).diff(moment(b.time)))
