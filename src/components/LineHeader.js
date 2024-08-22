@@ -9,7 +9,7 @@ export const LineHeader = () => {
     const { channel, setChannel } = store;
     return (
         <div className="flex h-[40px] w-[100%] items-center justify-between bg-[#8cabd9] px-1 font-bold">
-            <div className="left flex items-center text-[#202733] ">
+            <div className="left flex items-center text-[#202733] text-[12px] whitespace-nowrap">
                 <FiChevronLeft size={20} color="#202733" />
                 {channel.unReadCount > 0 && (
                     <div className="mr-2">

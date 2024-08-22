@@ -108,6 +108,7 @@ export default function Home() {
 
     async function downloadImg() {
         const _html = document.getElementById('line');
+        const fontEmbedCss = await html2Img.getFontEmbedCSS(_html);
         const messageContainer = _html.querySelector('#message-container');
         const temp = messageContainer.style.height;
         messageContainer.style.height = messageContainer.scrollHeight + 'px';
@@ -116,12 +117,18 @@ export default function Home() {
         at.innerHTML = '@flmg';
         messageContainer.appendChild(at);
 
-        const dataUri = await html2Img.toPng(_html, {
-            canvasHeight: _html.clientHeight * 2.5,
-            canvasWidth: _html.clientWidth * 2.5,
-            quality: 1,
-            pixelRatio: 1,
-        });
+        const dataUri = await html2Img.toPng(
+            _html,
+            {
+                canvasHeight: _html.clientHeight * 2.5,
+                canvasWidth: _html.clientWidth * 2.5,
+                quality: 1,
+                pixelRatio: 1,
+            },
+            {
+                fontEmbedCss,
+            }
+        );
         at.remove();
         messageContainer.style.height = temp;
 
