@@ -14,7 +14,7 @@ import { track } from '../utils/tracking';
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
     const [canMount, setIsCanMount] = useState(false);
-    const { messages, setMessages, channel } = store;
+    const { messages, setMessages } = store;
     const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
