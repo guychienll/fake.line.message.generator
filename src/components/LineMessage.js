@@ -1,4 +1,13 @@
-import { Avatar, Button, Image, Tooltip } from '@nextui-org/react';
+import {
+    Avatar,
+    Button,
+    Image,
+    Tooltip,
+    Modal,
+    useDisclosure,
+    ModalContent,
+    ModalBody,
+} from '@nextui-org/react';
 import clsx from 'clsx';
 import * as moment from 'moment';
 import { useRouter } from 'next/router';
@@ -10,6 +19,7 @@ import { useIntl } from 'react-intl';
 import { useLineStore } from '../../pages';
 import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../constants';
 import { track } from '../utils/tracking';
+import { isMobile } from 'react-device-detect';
 
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
@@ -86,6 +96,7 @@ export const LineMessage = () => {
                             .sort((a, b) => moment(a.time).diff(moment(b.time)))
                             .map((msg, idx) => (
                                 <Draggable
+                                    isDragDisabled={isMobile}
                                     key={msg.id}
                                     draggableId={msg.id}
                                     index={idx}
@@ -111,7 +122,7 @@ const MessageBubble = ({ msg, provided }) => {
     const intl = useIntl();
     const t = intl.messages[router.locale];
     const store = useLineStore((state) => state);
-
+    const { isOpen, onOpenChange, onOpen } = useDisclosure();
     const { messages, setMessages, setPlayer } = store;
 
     const handleDeleteMsg = (message) => {
@@ -153,54 +164,63 @@ const MessageBubble = ({ msg, provided }) => {
         });
     };
 
-    const deleteBtn = (
-        <Button
-            color="danger"
-            isIconOnly
-            onPress={() => {
-                handleDeleteMsg(msg);
-            }}
-        >
-            <IoTrashBinOutline />
-        </Button>
+    const renderEditingContent = (type) => (
+        <div className="flex flex-col gap-y-3">
+            <div className="flex gap-x-2">
+                <Button
+                    color="danger"
+                    isIconOnly
+                    onPress={() => {
+                        handleDeleteMsg(msg);
+                    }}
+                >
+                    <IoTrashBinOutline />
+                </Button>
+                {type === MESSAGE_TYPE.sender ? (
+                    <Button
+                        color="secondary"
+                        isIconOnly
+                        onPress={() => {
+                            handleRead(msg);
+                        }}
+                    >
+                        <FaEye />
+                    </Button>
+                ) : null}
+            </div>
+            <input
+                type="datetime-local"
+                value={moment(msg.time).format('YYYY-MM-DD HH:mm:ss')}
+                onChange={(e) => {
+                    handleTimeChange(e, msg);
+                }}
+            />
+        </div>
     );
 
-    const readBtn = (
-        <Button
-            color="secondary"
-            isIconOnly
-            onPress={() => {
-                handleRead(msg);
-            }}
+    const modalElem = (
+        <Modal
+            size="sm"
+            placement="top-center"
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            className="mx-6 py-4 px-2"
         >
-            <FaEye />
-        </Button>
+            <ModalContent>
+                <ModalBody>{renderEditingContent(msg.type)}</ModalBody>
+            </ModalContent>
+        </Modal>
     );
 
     if (msg.type === MESSAGE_TYPE.sender) {
         return (
             <div>
+                {modalElem}
                 {msg.type === MESSAGE_TYPE.sender && (
                     <Tooltip
                         placement="right"
                         className="px-2 py-2"
-                        content={
-                            <div className="flex flex-col gap-y-3">
-                                <div className="flex gap-x-2">
-                                    {deleteBtn}
-                                    {readBtn}
-                                </div>
-                                <input
-                                    type="datetime-local"
-                                    value={moment(msg.time).format(
-                                        'YYYY-MM-DD HH:mm:ss'
-                                    )}
-                                    onChange={(e) => {
-                                        handleTimeChange(e, msg);
-                                    }}
-                                />
-                            </div>
-                        }
+                        content={renderEditingContent(msg.type)}
                     >
                         <div
                             {...provided.draggableProps}
@@ -208,6 +228,7 @@ const MessageBubble = ({ msg, provided }) => {
                             ref={provided.innerRef}
                             className="mb-2 flex w-full cursor-pointer justify-end hover:opacity-80"
                             onClick={() => {
+                                if (isMobile) onOpen();
                                 setPlayer(msg.data.player);
                             }}
                         >
@@ -243,24 +264,12 @@ const MessageBubble = ({ msg, provided }) => {
 
     return (
         <div>
+            {modalElem}
             {msg.type === MESSAGE_TYPE.receiver && (
                 <Tooltip
                     placement="left"
                     className="px-2 py-2"
-                    content={
-                        <div className="flex flex-col gap-y-3">
-                            <div className="flex gap-x-2">{deleteBtn}</div>
-                            <input
-                                type="datetime-local"
-                                value={moment(msg.time).format(
-                                    'YYYY-MM-DD HH:mm:ss'
-                                )}
-                                onChange={(e) => {
-                                    handleTimeChange(e, msg);
-                                }}
-                            />
-                        </div>
-                    }
+                    content={renderEditingContent(msg.type)}
                 >
                     <div
                         {...provided.draggableProps}
@@ -268,6 +277,7 @@ const MessageBubble = ({ msg, provided }) => {
                         ref={provided.innerRef}
                         className="receiver mb-2 flex cursor-pointer self-start hover:opacity-80"
                         onClick={() => {
+                            if (isMobile) onOpen();
                             setPlayer(msg.data.player);
                         }}
                     >
