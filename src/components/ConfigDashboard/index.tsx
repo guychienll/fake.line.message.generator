@@ -1,6 +1,6 @@
 import { MESSAGE_TYPE } from '@/constants';
 import useLineStore from '@/stores/line';
-import { Avatar, CardFooter, Slider, Switch } from '@nextui-org/react';
+import { Avatar, CardFooter, Slider, Tab, Tabs } from '@nextui-org/react';
 import { useTranslation } from 'next-i18next';
 
 function ConfigDashboard() {
@@ -42,7 +42,7 @@ function ConfigDashboard() {
                             }
                             src={player.avatar}
                         />
-                        <div className="flex flex-col  gap-y-1">
+                        <div className="flex flex-col gap-y-1">
                             <input
                                 value={player.name}
                                 type="text"
@@ -55,28 +55,47 @@ function ConfigDashboard() {
                                     setPlayer(nextPlayer);
                                 }}
                             />
-                            <Switch
-                                defaultSelected
+                            <Tabs
                                 size="sm"
-                                color={
-                                    player.type === MESSAGE_TYPE.sender
-                                        ? 'success'
-                                        : 'default'
-                                }
-                                onClick={() => {
-                                    const nextPlayer =
-                                        player.type === MESSAGE_TYPE.sender
-                                            ? {
-                                                  ...player,
-                                                  type: MESSAGE_TYPE.receiver,
-                                              }
-                                            : {
-                                                  ...player,
-                                                  type: MESSAGE_TYPE.sender,
-                                              };
+                                color="success"
+                                selectedKey={player.type}
+                                onSelectionChange={(key) => {
+                                    const nextPlayer = {
+                                        ...player,
+                                        type: key as (typeof MESSAGE_TYPE)[keyof typeof MESSAGE_TYPE],
+                                    };
                                     setPlayer(nextPlayer);
                                 }}
-                            />
+                            >
+                                <Tab
+                                    key={MESSAGE_TYPE.sender}
+                                    title={
+                                        <div
+                                            className={
+                                                player.type === MESSAGE_TYPE.sender
+                                                    ? 'text-[#ffffff]'
+                                                    : 'text-black'
+                                            }
+                                        >
+                                            {t('line_config_dashboard_sender')}
+                                        </div>
+                                    }
+                                />
+                                <Tab
+                                    key={MESSAGE_TYPE.receiver}
+                                    title={
+                                        <div
+                                            className={
+                                                player.type === MESSAGE_TYPE.receiver
+                                                    ? 'text-[#ffffff]'
+                                                    : 'text-black'
+                                            }
+                                        >
+                                            {t('line_config_dashboard_receiver')}
+                                        </div>
+                                    }
+                                />
+                            </Tabs>
                         </div>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ export default function Home() {
                 <Card className="w-[300px] shadow-lg">
                     <ExportingPanel />
                     <CardBody
-                        className="h-[100%] min-h-[550px] w-auto"
+                        className="h-[100%] min-h-[520px] w-auto"
                         id="line"
                     >
                         <LineHeader />
