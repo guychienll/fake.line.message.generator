@@ -16,8 +16,8 @@ const useGoogleAnalytics = (props: UseGoogleAnalyticsProps) => {
             document.head.appendChild(gaScript);
 
             window.dataLayer = window.dataLayer || [];
-            window.gtag = function () {
-                window.dataLayer.push(arguments);
+            window.gtag = function (...args: any[]) {
+                window.dataLayer.push(...args);
             };
             window.gtag('js', new Date());
             window.gtag('config', gaId, { debug_mode: true });

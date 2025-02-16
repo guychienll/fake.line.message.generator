@@ -43,7 +43,7 @@ function ExportingPanel() {
             <div className="flex items-center">
                 <Avatar
                     ImgComponent={(props) => {
-                        return <img {...props} />;
+                        return <img {...props} alt="line logo" />;
                     }}
                     color="success"
                     className="mr-3 size-10 ring-2 ring-success/30"

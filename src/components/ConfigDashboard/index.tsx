@@ -33,7 +33,7 @@ function ConfigDashboard() {
                             isBordered
                             className="cursor-pointer text-[#ffffff]"
                             ImgComponent={(props) => {
-                                return <img {...props} />;
+                                return <img {...props} alt="avatar" />;
                             }}
                             color={
                                 player.type === MESSAGE_TYPE.sender
