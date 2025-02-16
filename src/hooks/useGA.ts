@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 
-const useGoogleAnalytics = (props) => {
+interface UseGoogleAnalyticsProps {
+    gaId: string;
+    gtmId?: string | null;
+}
+
+const useGoogleAnalytics = (props: UseGoogleAnalyticsProps) => {
     const { gaId, gtmId = null } = props;
 
     useEffect(() => {
@@ -18,16 +23,19 @@ const useGoogleAnalytics = (props) => {
             window.gtag('config', gaId, { debug_mode: true });
         }
 
-        if (gtmId) {
-            const gtmScriptTag = document.createElement('script');
-            gtmScriptTag.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        if (!gtmId) {
+            return;
+        }
+
+        const gtmScriptTag = document.createElement('script');
+        gtmScriptTag.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer', '${gtmId}');`;
 
-            const gtmNoScriptTag = document.createElement('noscript');
-            gtmNoScriptTag.innerHTML = `
+        const gtmNoScriptTag = document.createElement('noscript');
+        gtmNoScriptTag.innerHTML = `
                 <iframe
             src="https://www.googletagmanager.com/ns.html?id=${gtmId}"
             height="0"
@@ -36,9 +44,8 @@ const useGoogleAnalytics = (props) => {
           />
 `;
 
-            document.head.appendChild(gtmScriptTag);
-            document.body.appendChild(gtmNoScriptTag);
-        }
+        document.head.appendChild(gtmScriptTag);
+        document.body.appendChild(gtmNoScriptTag);
     }, [gaId, gtmId]);
 };
 

@@ -1,7 +1,4 @@
-import { Html, Head, Main, NextScript } from 'next/document';
-import * as React from 'react';
-
-import { NextUIProvider } from '@nextui-org/react';
+import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
     const title = 'Fake Line Message Generator';
@@ -27,15 +24,24 @@ export default function Document() {
                 <meta name="twitter:title" content={title} />
                 <meta name="twitter:description" content={description} />
                 <meta name="twitter:image" content="/line_logo.png" />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1, maximum-scale=1"
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link
+                    rel="preconnect"
+                    href="https://fonts.gstatic.com"
+                    crossOrigin="anonymous"
+                />
+                <link
+                    href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
+                    rel="stylesheet"
+                />
+                <script
+                    src="https://kit.fontawesome.com/badc861d67.js"
+                    crossOrigin="anonymous"
+                    async
                 />
             </Head>
             <body>
-                <NextUIProvider>
-                    <Main />
-                </NextUIProvider>
+                <Main />
                 <NextScript />
             </body>
         </Html>

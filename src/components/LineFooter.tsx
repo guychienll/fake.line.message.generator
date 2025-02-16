@@ -1,13 +1,13 @@
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BiMicrophone } from 'react-icons/bi';
 import { FiCamera, FiPlus } from 'react-icons/fi';
 import { MdOutlineBrokenImage } from 'react-icons/md';
 import { PiSmiley } from 'react-icons/pi';
 import { v4 as uuid } from 'uuid';
-import { useLineStore } from '../../pages';
-import { MESSAGE_VARIANT } from '../constants';
-import { track } from '../utils/tracking';
+import { MESSAGE_VARIANT } from '@/constants';
+import useLineStore from '@/stores/line';
+import { track } from '@/utils/tracking';
 
 export const LineFooter = () => {
     const store = useLineStore((state) => state);
@@ -91,7 +91,9 @@ export const LineFooter = () => {
                 size={20}
                 className="cursor-pointer"
                 onClick={() => {
-                    const btn = document.querySelector('#upload-image-btn');
+                    const btn = document.querySelector(
+                        '#upload-image-btn'
+                    ) as HTMLInputElement;
                     btn.click();
                 }}
             />

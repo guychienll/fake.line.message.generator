@@ -1,24 +1,23 @@
 import {
     Avatar,
     Button,
-    Tooltip,
     Modal,
-    useDisclosure,
-    ModalContent,
     ModalBody,
+    ModalContent,
+    Tooltip,
+    useDisclosure,
 } from '@nextui-org/react';
 import clsx from 'clsx';
-import * as moment from 'moment';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import moment from 'moment';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { isMobile } from 'react-device-detect';
 import { FaEye } from 'react-icons/fa';
 import { IoTrashBinOutline } from 'react-icons/io5';
-import { useIntl } from 'react-intl';
-import { useLineStore } from '../../pages';
-import { MESSAGE_TYPE, MESSAGE_VARIANT } from '../constants';
-import { track } from '../utils/tracking';
-import { isMobile } from 'react-device-detect';
+import { MESSAGE_TYPE, MESSAGE_VARIANT } from '@/constants';
+import useLineStore from '@/stores/line';
+import { track } from '@/utils/tracking';
 
 export const LineMessage = () => {
     const store = useLineStore((state) => state);
@@ -117,9 +116,7 @@ export const LineMessage = () => {
 };
 
 const MessageBubble = ({ msg, provided }) => {
-    const router = useRouter();
-    const intl = useIntl();
-    const t = intl.messages[router.locale];
+    const { t } = useTranslation();
     const store = useLineStore((state) => state);
     const { isOpen, onOpenChange, onOpen } = useDisclosure();
     const { messages, setMessages, setPlayer } = store;
@@ -155,7 +152,7 @@ const MessageBubble = ({ msg, provided }) => {
         const targetIdx = messages.findIndex((_msg) => _msg.id === message.id);
         const nextMessages = [...messages];
 
-        nextMessages[targetIdx].time = formatDate;
+        nextMessages[targetIdx].time = new Date(formatDate);
         setMessages(nextMessages);
         track('event', 'change_message_time', {
             event_category: 'edit',
@@ -203,7 +200,7 @@ const MessageBubble = ({ msg, provided }) => {
             placement="top-center"
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            className="mx-6 py-4 px-2"
+            className="mx-6 px-2 py-4"
         >
             <ModalContent>
                 <ModalBody>{renderEditingContent(msg.type)}</ModalBody>
@@ -234,7 +231,7 @@ const MessageBubble = ({ msg, provided }) => {
                             <div className="mr-1 flex flex-col items-end gap-y-1 self-end text-[10px] tracking-wide text-[#46556b]">
                                 <small>
                                     {msg.read
-                                        ? t['line.message.body.read']
+                                        ? t('line_message_body_read')
                                         : ''}
                                 </small>
                                 <small>
@@ -282,11 +279,9 @@ const MessageBubble = ({ msg, provided }) => {
                         }}
                     >
                         <Avatar
-                            width={30}
-                            height={30}
+                            size="sm"
                             ImgComponent={Image}
                             alt="receiver-avatar"
-                            size="sm"
                             className="mr-2"
                             src={msg.data.player.avatar || '/100x100.png'}
                         />

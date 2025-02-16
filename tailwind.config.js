@@ -12,6 +12,9 @@ module.exports = {
             aspectRatio: {
                 '90/160': '90 / 160',
             },
+            fontFamily: {
+                dynapuff: ['DynaPuff', 'sans-serif'],
+            },
         },
     },
     darkMode: 'class',
