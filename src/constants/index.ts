@@ -27,10 +27,16 @@ const SOCIAL_LINKS = [
     },
 ];
 
+const TITLE = 'FLMG | Fake Line Message Generator';
+const DESCRIPTION =
+    'A Generator of Fake Line Messages / Chat. Provided for the purpose of internet marketing.';
+
 export {
     DISCLAIMER_CONFIRM_KEY,
     LOCALES,
     MESSAGE_TYPE,
     MESSAGE_VARIANT,
     SOCIAL_LINKS,
+    TITLE,
+    DESCRIPTION,
 };

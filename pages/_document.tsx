@@ -1,17 +1,13 @@
+import { DESCRIPTION } from '@/constants';
+import { TITLE } from '@/constants';
 import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
-    const title = 'Fake Line Message Generator';
-    const description =
-        'A Generator of Fake Line Messages / Chat. Provided for the purpose of internet marketing.';
     return (
         <Html lang="en">
-            <title>{title}</title>
             <Head>
-                <meta name="description" content={description} />
-
-                <meta property="og:title" content={title} />
-                <meta property="og:description" content={description} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="og:description" content={DESCRIPTION} />
                 <meta property="og:image" content="/line_logo.png" />
                 <meta property="og:type" content="website" />
                 <meta
@@ -21,8 +17,8 @@ export default function Document() {
 
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@guychienll" />
-                <meta name="twitter:title" content={title} />
-                <meta name="twitter:description" content={description} />
+                <meta name="twitter:title" content={TITLE} />
+                <meta name="twitter:description" content={DESCRIPTION} />
                 <meta name="twitter:image" content="/line_logo.png" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link

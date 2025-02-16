@@ -1,3 +1,4 @@
+import { DESCRIPTION, TITLE } from '@/constants';
 import '@/styles/globals.css';
 import { NextUIProvider } from '@nextui-org/react';
 import 'devicon/devicon.min.css';
@@ -9,6 +10,8 @@ function MyApp({ Component, pageProps }) {
     return (
         <>
             <Head>
+                <title>{TITLE}</title>
+                <meta name="description" content={DESCRIPTION} />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1, maximum-scale=1"
